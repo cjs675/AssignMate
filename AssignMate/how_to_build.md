@@ -44,7 +44,8 @@ make
 
 - run the executable:  
 
-```./Tracker
+```bash
+./Tracker
 ```
 
 ### Windows (PowerShell or CMD) 
