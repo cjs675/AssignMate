@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_Tracker_FILE /Users/chrissilva/environment/school/cop_3003/projects/finalProjectTest/build/Tracker)
+set(__QT_DEPLOY_TARGET_Tracker_TYPE EXECUTABLE)
