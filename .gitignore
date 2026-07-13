@@ -1,0 +1,46 @@
+# ignore user data 
+*.db 
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# ignore compilation & build folder 
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake 
+compile_commands.json
+*_autogen/
+
+# ignore compiled programs & .o files 
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.dylib
+*.dll
+*.so
+*.a
+*.lib 
+
+
+# ignore local user settings for Qt Creator 
+CMakeLists.txt.user 
+*.pro.user
+
+# OS specific files 
+.DS_Store
+.DS_Store?  
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE / editor folders 
+.vscode/
+.idea/
