@@ -222,7 +222,7 @@ public:
 
         QHBoxLayout *courseHeaderLayout = new QHBoxLayout;
         QPushButton *backBtn = new QPushButton(" ← Back", pageCourseDetail);
-        backBtn -> setFixedWidth(80);
+        backBtn -> setFixedWidth(100);
         m_courseTitleLabel = new QLabel("Course Name", pageCourseDetail);
         m_courseTitleLabel -> setStyleSheet("font-size: 24px; font-weight: bold;");
         courseHeaderLayout -> addWidget(backBtn);
@@ -345,7 +345,7 @@ public:
         });
 
         // load QSS file externally
-        QFile styleFile("style.qss");
+        QFile styleFile("../style.qss");
         // check if file exists, can be read & is of type text
         // bitwise OR flag passed in to make sure both conditions are met
         if (styleFile.open(QFile::ReadOnly | QFile::Text)) {
