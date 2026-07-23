@@ -54,6 +54,9 @@ QComboBox QAbstractItemView {
         selection-background-color: #1a2536;
         selection-color: #2979ff;
         outline: none;
+        /* force popup list to be wider than button
+        * so we can see all elements in drop-down */
+        min-width: 120px;
     }
 
 QListWidget::item {
@@ -69,18 +72,21 @@ QListWidget::item:selected {
 
 /* Action buttons */ 
 
+QPushButton#actionBtn, QPushButton#dangerBtn {
+    padding: 4px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    font-weight: bold;
+
+    }
 QPushButton#actionBtn {
         background-color: #2979ff;
         color: white;
-        text-align: center;
-        border-radius: 6px;
     }
 
 QPushButton#dangerBtn {
         background-color: #d32f2f;
         color: white;
-        text-align: center;
-        border-radius: 6px;
     }
 
 
