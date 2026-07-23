@@ -345,10 +345,21 @@ public:
         });
 
         // load QSS file externally
-
-
+        QFile styleFile("style.qss");
+        // check if file exists, can be read & is of type text
+        // bitwise OR flag passed in to make sure both conditions are met
+        if (styleFile.open(QFile::ReadOnly | QFile::Text)) {
+            // style.qss passed by reference into stream
+           QTextStream stream(&styleFile);
+            // set style of main window to stream of QSS text read from style.qss
+            this -> setStyleSheet(stream.readAll());
+            // close file after reading so it doesn't stay open in memory
+            styleFile.close();
+        } else {
+            // message to print if style file cannot be found
+            qDebug() << "Error: style.qss not found...";
+        }
     }
-
 
     // helper function to redraw list of courses on main dashboard
     void refreshCourseList() {
