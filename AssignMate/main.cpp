@@ -18,6 +18,7 @@
 #include <QFile>       // allow Qt to find file (style.qss)
 #include <QTextStream> // allow read of stream of text from style.qss
 #include <QDebug>      // print warning if external qss file can't be found
+#include <QDateEdit>   // QT date picker object
 
 
 
@@ -143,6 +144,7 @@ private:
     QTableWidget *m_assignmentTable;
     QLineEdit *m_assignmentInput;
     QComboBox *m_assignmentTypeCombo;
+    QDateEdit *m_assignmentDate;
 
 public: 
     MainWindow(QWidget *parent = nullptr) : QMainWindow(parent) {
@@ -247,6 +249,12 @@ public:
         m_assignmentInput= new QLineEdit(pageCourseDetail);
         m_assignmentInput -> setPlaceholderText("New assignment title: ");
 
+        m_assignmentDate = new QDateEdit(pageCourseDetail);
+        m_assignmentDate -> setDate(QDate::currentDate());  // default to current date
+        m_assignmentDate -> setCalendarPopup(true);  // allow calendar popup to show
+                                                            // more UI-friendly than inputting date as
+                                                            // standard MM-DD-YYYY format
+
         QPushButton *btnAddAssignment = new QPushButton("Add Assignment", pageCourseDetail);
         btnAddAssignment -> setObjectName("actionBtn");
         QPushButton *btnDropAssignment = new QPushButton("Drop Selected Assignment", pageCourseDetail);
@@ -254,6 +262,7 @@ public:
 
         addAssignmentLayout -> addWidget(m_assignmentTypeCombo);
         addAssignmentLayout -> addWidget(m_assignmentInput);
+        addAssignmentLayout -> addWidget(m_assignmentDate);
         addAssignmentLayout -> addWidget(btnAddAssignment);
         addAssignmentLayout -> addWidget(btnDropAssignment);
 
@@ -316,20 +325,23 @@ public:
             }
         });
 
-        // receive signal of back button click
+        // receive signal: back button click
         connect(backBtn, &QPushButton::clicked, this, [this]() {
             m_currentCourse = nullptr;
             m_contentStack -> setCurrentIndex(0);
         });
 
-        // receive signal of add assignment button click
+        // receive signal: add assignment button click
         connect(btnAddAssignment, &QPushButton::clicked, this, [this]() {
            if (m_currentCourse && !m_assignmentInput -> text().isEmpty()) {
                QString title = m_assignmentInput -> text();
+
+               QDate selectedDate = m_assignmentDate -> date();
+
                if (m_assignmentTypeCombo -> currentText() == "Homework") {
-                   m_currentCourse -> addAssignment(new Homework(title, QDate::currentDate().addDays(7), 4));
+                   m_currentCourse -> addAssignment(new Homework(title, selectedDate, 1));
                } else {
-                   m_currentCourse -> addAssignment(new Exam(title, QDate::currentDate().addDays(14), 60));
+                   m_currentCourse -> addAssignment(new Exam(title, selectedDate, 90));
                }
                m_assignmentInput -> clear();
                refreshAssignmentTable();
@@ -397,7 +409,7 @@ public:
             });
 
             m_assignmentTable -> setItem(row, 1, new QTableWidgetItem(current -> getTitle()));
-            m_assignmentTable -> setItem(row, 2, new QTableWidgetItem(current -> getDueDate().toString("MM dd, yyyy")));
+            m_assignmentTable -> setItem(row, 2, new QTableWidgetItem(current -> getDueDate().toString("MM, dd, yyyy")));
             // dynamically call exam or assignment getDetails() method
             m_assignmentTable -> setItem(row, 3, new QTableWidgetItem(current -> getDetails()));
         }
