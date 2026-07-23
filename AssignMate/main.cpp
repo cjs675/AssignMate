@@ -15,6 +15,9 @@
 #include <QLineEdit>
 #include <QTableWidget>
 #include <QComboBox>
+#include <QFile>       // allow Qt to find file (style.qss)
+#include <QTextStream> // allow read of stream of text from style.qss
+#include <QDebug>      // print warning if external qss file can't be found
 
 
 
@@ -341,85 +344,9 @@ public:
            }
         });
 
-        // dark mode qt style sheets (QSS)
-        QString darkTheme = R"(
-            QMainWindow, QStackedWidget {
-                background-color: #0b1421;
-            }
-            QLabel {
-                color: #ffffff;
-                font-size: 18px;
-            }
-            #sidebarWidget {
-                background-color: #131c2d;
-                border-right: 1px solid #1f2a3f;
-            }
-            QPushButton {
-                background-color: transparent;
-                color: #8a99af;
-                text-align: center;
-                padding: 12px, 20px;
-                border: none;
-                border-left: 3px solid transparent;
-                font-weight: bold;
-                font-size: 14px;
-            }
-            QPushButton:hover {
-                background-color: #1a2536;
-                color: #ffffff;
-            }
-            QPushButton:checked {
-                border-left: 3px solid #2979ff;
-                color: #ffffff;
-                background-color: #1a2536;
-            }
+        // load QSS file externally
 
-            QLineEdit, QComboBox, QListWidget, QTableWidget {
-                background-color: #131c2d;
-                color: #ffffff;
-                border: 1px solid #1f2a3f;
-                border-radius: 6px;
-                padding: 5px;
-            }
 
-            QListWidget::item {
-                padding: 10px;
-                border-bottom: 1px solid #1f2a3f;
-            }
-            QListWidget::item:selected {
-                background-color: #1a2536;
-                color: #2979ff;
-            }
-
-            QPushButton#actionBtn {
-                background-color: #2979ff;
-                color: white;
-                text-align: center;
-                border-radius: 6px;
-            }
-
-            QPushButton#dangerBtn {
-                background-color: #d32f2f;
-                color: white;
-                text-align: center;
-                border-radius: 6px;
-            }
-
-            /* Table styles */
-            QHeaderView::section {
-                background-color: #0b1421;
-                color: #8a99af;
-                padding: 5px;
-                border: none;
-                border-bottom: 1px solid #1f2a3f;
-                font-weight: bold;
-            }
-            QTableWidget::item {
-                border-bottom: 1px solid #1f2a3f;
-                padding: 10px;
-            }
-        )";
-        this -> setStyleSheet(darkTheme);
     }
 
 
