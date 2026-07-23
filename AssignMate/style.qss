@@ -32,7 +32,7 @@ QPushButton:hover {
     }
 
 QPushButton:checked {
-        border:left: 3px solid #2979ff;
+        border-left: 3px solid #2979ff;
         color: #ffffff;
         background-color: #1a2536;
     }
@@ -47,7 +47,7 @@ QLineEdit, QComboBox, QListWidget, QTableWidget {
         padding: 5px;
     }
 
-QComboBox, QAbstractItemView {
+QComboBox QAbstractItemView {
         background-color: #131c2d;
         color: #ffffff;
         border: 1px solid #1f2a3f;
@@ -61,7 +61,7 @@ QListWidget::item {
         border-bottom: 1px solid #1f2a3f;
     }
 
-QListWidget::item::selected {
+QListWidget::item:selected {
         background-color: #1a2536;
         color: #2979ff;
     }
@@ -80,7 +80,7 @@ QPushButton#dangerBtn {
         background-color: #d32f2f;
         color: white;
         text-align: center;
-        borde-radius: 6px;
+        border-radius: 6px;
     }
 
 
