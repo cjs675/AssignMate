@@ -19,6 +19,7 @@
 #include <QTextStream> // allow read of stream of text from style.qss
 #include <QDebug>      // print warning if external qss file can't be found
 #include <QDateEdit>   // QT date picker object
+#include <stdexcept>  // standard C++ exceptions lib
 
 
 /**
@@ -48,7 +49,7 @@ public:
     /**
      * @brief Virtual Destructor
      * Ensures when child object (such as Exam #1) is
-     * deleted via a base pointer the child's destructor
+     * deleted via a base pointer, the child's destructor
      * is called first --> preventing memory leaks
      */
     virtual ~Assignment() {}
@@ -349,8 +350,8 @@ public:
         m_assignmentDate = new QDateEdit(pageCourseDetail);
         m_assignmentDate -> setDate(QDate::currentDate());  // default to current date
         m_assignmentDate -> setCalendarPopup(true);  // allow calendar popup to show
-                                                            // more UI-friendly than inputting date as
-                                                            // standard MM-DD-YYYY format
+        // more UI-friendly than inputting date as
+        // standard MM-DD-YYYY format
 
         m_btnAddAssignment = new QPushButton("Add Assignment", pageCourseDetail);
         m_btnAddAssignment -> setObjectName("actionBtn");
@@ -492,25 +493,25 @@ public:
            }
         });
 
-
-        /*
-         * ======= TODO: wrap this if-else block in a try-catch-throw ====
-         */
-
         // load QSS file externally
         QFile styleFile("../style.qss");
-        // check if file exists, can be read & is of type text
-        // bitwise OR flag passed in to make sure both conditions are met
-        if (styleFile.open(QFile::ReadOnly | QFile::Text)) {
+        try {
+            // check if file exists, can be read & is of type text
+            // bitwise OR flag passed in to make sure both conditions are met
+            if (styleFile.open(QFile::ReadOnly | QFile::Text)) {
+                throw std::runtime_error("Could not find or open style.qss...");
+            }
             // style.qss passed by reference into stream
-           QTextStream stream(&styleFile);
+            QTextStream stream(&styleFile);
             // set style of main window to stream of QSS text read from style.qss
             this -> setStyleSheet(stream.readAll());
             // close file after reading so it doesn't stay open in memory (prevent memory leaks)
             styleFile.close();
-        } else {
+        } catch (const std::exception& e) {
             // message to print if style file cannot be found
-            qDebug() << "Error: style.qss not found...";
+            // e.what() prints the string message returned
+            // by the try-catch block
+            qDebug() << "Exception caught:"  << e.what();
         }
     }
 
