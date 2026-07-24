@@ -303,8 +303,24 @@ public:
         // sidebar navigation
         connect(navGroup, &QButtonGroup::idClicked, this, [this](int id) {
             // map sidebar index
-            if (id == 0) m_contentStack -> setCurrentIndex(0);
-            if (id == 1) m_contentStack -> setCurrentIndex(1);
+            if (id == 0) {
+                m_contentStack -> setCurrentIndex(0);
+            }
+            if (id == 1) {
+                // initialize current course context to null,
+                // i.e., no specific course is selected
+                m_currentCourse = nullptr;
+                refreshAssignmentTable();
+                // hide controls pertinent to
+                // an individual course
+                m_assignmentTypeCombo -> hide();
+                m_assignmentInput -> hide();
+                m_assignmentDate -> hide();
+                m_btnAddAssignment -> hide();
+                m_btnDropAssignment -> hide();
+
+                m_contentStack -> setCurrentIndex(1);
+            }
             if (id == 2) m_contentStack -> setCurrentIndex(2);
         });
 
@@ -324,6 +340,15 @@ public:
                 m_currentCourse = m_courses[index];
                 m_courseTitleLabel -> setText(m_currentCourse -> getName());
                 refreshAssignmentTable();
+
+                // show controls pertinent to a course
+                // if a specified course is now active
+                m_assignmentTypeCombo -> show();
+                m_assignmentInput -> show();
+                m_assignmentDate -> show();
+                m_btnAddAssignment -> show();
+                m_btnDropAssignment -> show();
+
                 m_contentStack -> setCurrentIndex(1);   // return to view of given course
             }
         });
@@ -335,7 +360,7 @@ public:
         });
 
         // receive signal: add assignment button click
-        connect(btnAddAssignment, &QPushButton::clicked, this, [this]() {
+        connect(m_btnAddAssignment, &QPushButton::clicked, this, [this]() {
            if (m_currentCourse && !m_assignmentInput -> text().isEmpty()) {
                QString title = m_assignmentInput -> text();
 
@@ -352,7 +377,7 @@ public:
         });
 
         // receive signal to 'drop' assignment
-        connect(btnDropAssignment, &QPushButton::clicked, this, [this]() {
+        connect(m_btnDropAssignment, &QPushButton::clicked, this, [this]() {
            if (m_currentCourse && m_assignmentTable -> currentRow() >= 0) {
                m_currentCourse -> dropAssignment(m_assignmentTable -> currentRow());
                refreshAssignmentTable();
@@ -381,6 +406,40 @@ public:
         m_courseList -> clear();
         for (Course* c : m_courses) {
             m_courseList -> addItem(c -> getName());
+        }
+    }
+
+    // helper function that aggregates data from all courses
+    void returnAllAssignments() {
+        m_courseTitleLabel -> setText("All Active Assignments");
+        m_assignmentTable -> setRowCount(0);
+
+        for (Course* course : m_courses) {
+            QVector<Assignment*>& assignments = course -> getAssignments();
+
+            for (Assignment* current : assignments) {
+                int row = m_assignmentTable -> rowCount();
+                m_assignmentTable -> insertRow(row);
+
+                QWidget *checkBoxWidget = new QWidget();
+                QHBoxLayout *checkBoxLayout = new QHBoxLayout(checkBoxWidget);
+                QCheckBox *checkBox = new QCheckBox;
+                checkBox -> setChecked(current -> isCompleted());
+                checkBoxLayout -> addWidget(checkBox);
+                checkBoxLayout -> setAlignment(Qt::AlignCenter);
+                checkBoxLayout -> setContentsMargins(0, 0, 0, 0);
+                m_assignmentTable -> setCellWidget(row, 0, checkBoxWidget);
+
+                connect(checkBox, &QCheckBox::toggled, this, [current](bool checked) {
+                    current -> setCompleted(checked);
+                });
+
+                m_assignmentTable -> setItem(row, 1, new QTableWidgetItem(current -> getTitle()));
+                m_assignmentTable -> setItem(row, 2, new QTableWidgetItem(current -> getDueDate().toString("MM/dd/yyyy")));
+
+                QString courseDetailString = QString("[%1] %2").arg(course -> getName(), current -> getDetails());
+                m_assignmentTable -> setItem(row, 3, new QTableWidgetItem(courseDetailString));
+            }
         }
     }
 
