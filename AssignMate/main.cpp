@@ -1,11 +1,11 @@
 #include <QApplication>
 #include <QMainWindow>
-#include <QWidget> 
-#include <QHBoxLayout> 
+#include <QWidget>
+#include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QPushButton> 
-#include <QStackedWidget> 
-#include <QLabel> 
+#include <QPushButton>
+#include <QStackedWidget>
+#include <QLabel>
 #include <QButtonGroup>
 #include <QVector>
 #include <QDate>
@@ -145,8 +145,11 @@ private:
     QLineEdit *m_assignmentInput;
     QComboBox *m_assignmentTypeCombo;
     QDateEdit *m_assignmentDate;
+    QPushButton *m_btnAddAssignment;
+    QPushButton *m_btnDropAssignment;
 
-public: 
+
+public:
     MainWindow(QWidget *parent = nullptr) : QMainWindow(parent) {
         setWindowTitle("Assignment Tracker");
         resize(1000, 600);
@@ -155,10 +158,10 @@ public:
         QWidget *centralWidget = new QWidget(this);
         setCentralWidget(centralWidget);
         QHBoxLayout *mainLayout= new QHBoxLayout(centralWidget);
-        mainLayout -> setContentsMargins(0, 0, 0, 0); // remove default padding  
+        mainLayout -> setContentsMargins(0, 0, 0, 0); // remove default padding
         mainLayout -> setSpacing(0);
 
-        // 2. sidebar setup 
+        // 2. sidebar setup
         QWidget *sidebar = new QWidget(this);
         sidebar -> setObjectName("sidebarWidget"); // tagged for QSS styling
         sidebar -> setFixedWidth(220);
@@ -166,25 +169,25 @@ public:
         sidebarLayout -> setContentsMargins(0, 20, 0, 20);
         sidebarLayout -> setSpacing(5);
 
-        // create nav buttons 
+        // create nav buttons
         QPushButton *btnDashboard = new QPushButton("Dashboard", sidebar);
         QPushButton *btnAssignments = new QPushButton("All Assignments", sidebar);
         QPushButton *btnSettings = new QPushButton("Settings", sidebar);
 
-        // make buttons checkable for "active" styling state 
+        // make buttons checkable for "active" styling state
         btnDashboard -> setCheckable(true);
         btnAssignments -> setCheckable(true);
         btnSettings -> setCheckable(true);
-        btnDashboard -> setChecked(true);   // default to main dashboard 
+        btnDashboard -> setChecked(true);   // default to main dashboard
 
-        // group buttons so only one can be checked at a time 
+        // group buttons so only one can be checked at a time
         QButtonGroup *navGroup = new QButtonGroup(this);
         navGroup -> setExclusive(true);
         navGroup -> addButton(btnDashboard, 0);
         navGroup -> addButton(btnAssignments, 1);
         navGroup -> addButton(btnSettings, 2);
 
-        // add buttons to sidebar, then push to top with spacer 
+        // add buttons to sidebar, then push to top with spacer
         sidebarLayout -> addWidget(btnDashboard);
         sidebarLayout -> addWidget(btnAssignments);
         sidebarLayout -> addWidget(btnSettings);
@@ -255,16 +258,16 @@ public:
                                                             // more UI-friendly than inputting date as
                                                             // standard MM-DD-YYYY format
 
-        QPushButton *btnAddAssignment = new QPushButton("Add Assignment", pageCourseDetail);
-        btnAddAssignment -> setObjectName("actionBtn");
-        QPushButton *btnDropAssignment = new QPushButton("Drop Selected Assignment", pageCourseDetail);
-        btnDropAssignment -> setObjectName("dangerBtn");
+        m_btnAddAssignment = new QPushButton("Add Assignment", pageCourseDetail);
+        m_btnAddAssignment -> setObjectName("actionBtn");
+        m_btnDropAssignment = new QPushButton("Drop Selected Assignment", pageCourseDetail);
+        m_btnDropAssignment -> setObjectName("dangerBtn");
 
         addAssignmentLayout -> addWidget(m_assignmentTypeCombo);
         addAssignmentLayout -> addWidget(m_assignmentInput);
         addAssignmentLayout -> addWidget(m_assignmentDate);
-        addAssignmentLayout -> addWidget(btnAddAssignment);
-        addAssignmentLayout -> addWidget(btnDropAssignment);
+        addAssignmentLayout -> addWidget(m_btnAddAssignment);
+        addAssignmentLayout -> addWidget(m_btnDropAssignment);
 
         courseLayout -> addLayout(courseHeaderLayout);
         courseLayout -> addWidget(m_assignmentTable);
