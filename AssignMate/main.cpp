@@ -82,7 +82,14 @@ public:
     virtual QString getDetails() const = 0;
 };
 
-// DERIVED class (1)
+/**
+ * @class Exam
+ * @brief Derived class (1) representing a test or exam
+ *
+ * Demonstrates inheritance via inheriting from Assignment class.
+ * Demonstrates runtime polymorphism via an override
+ * of the getDetails method.
+ */
 class Exam : public Assignment {
 private:
     int m_minuteDuration;
@@ -91,69 +98,134 @@ public:
     Exam(QString title, QDate dueDate, int minuteDuration)
         : Assignment(title, dueDate), m_minuteDuration(minuteDuration) {}
 
-    // polymorphic override
-    // formats child class's unique duration values for the UI table
+    /**
+     * @brief Polymorphic override that formats the child class's
+     * unique duration values for the UI table
+     */
     QString getDetails() const override {
         return QString("Exam: %1 Minutes").arg(m_minuteDuration);
     }
 };
 
-// DERIVED class (2)
+/**
+ * @class Homework
+ * @brief Derived class (2) that represents a standard
+ *        homework assignment
+ */
 class Homework : public Assignment {
 private:
     int m_tasks;
 public:
     Homework(QString title, QDate dueDate, int tasks)
         : Assignment(title, dueDate), m_tasks(tasks) {}
-    // polymorphic override
-    // formats child class's unique duration values for the UI table
+
+    /**
+     * @brief Formats the child class's unique task values for the UI table
+     */
     QString getDetails() const override {
         return QString("Homework: %1 Tasks").arg(m_tasks);
     }
 };
 
+/**
+ * @class Course
+ * @brief Represents a single school course with its own assignments
+ *
+ * A course physically 'owns' multiple assignments and is
+ * responsible for managing their memory.
+ */
 class Course {
 private:
     QString m_name;
+
+    /**
+     *  @brief A dynamic list of Qt's implementation of std::vector.
+     *         We hold the pointer to the individual Assignments to
+     *         be able to mix different classes of assignments inside
+     *         one vector.
+     *
+     *         Recall: vectors can only hold values of the same kind of type.
+     *         Because we only store the pointer of a given assignment,
+     *         different child objects assignments can be stored together.
+     *
+     *         Since Assignment is an Abstract class containing a pure virtual
+     *         function, its objects can't be stored by value - they must
+     *         be stored as pointers.
+     */
     QVector<Assignment*> m_assignments;
 
 public:
     Course(QString name) : m_name(name) {}
 
-    // destructor to clean up memory when
-    // course object is deleted
+    /**
+     *  @brief Destructor to clean up memory when the course object
+     *         is deleted.
+     *         Prevents memory leaks by manually deleting all child
+     *         Assignment pointers
+     */
     ~Course() {
         for (Assignment* a : m_assignments) {
             delete a;
         }
     }
 
+    // --- Course Operations ---
     QString getName() const {
         return m_name;
     }
+
+    /**
+     * @brief Returns list of assignments for a given course.
+     *
+     *         The '&' in the return type means this function returns by
+     *         Reference.
+     *         Instead of creating a clone of the entire vector, we can
+     *         access the original m_assignments vector.
+     *         This ensures when we add/remove an assignment, we modify the
+     *         actual course object's data rather than modifying a copy.
+     */
     QVector<Assignment*>& getAssignments() {
         return m_assignments;
     }
+
+    /**
+     *
+     * @brief Adds a new assignment to the end of the course's list.
+     *        A pointer (a) to a given Assignment object is handed over
+     *        to the Course.
+     *        The course then takes ownership of its memory & guarantees
+     *        it will be safely deleted by its destructor.
+     */
     void addAssignment(Assignment* a) {
         m_assignments.push_back(a);
     }
     void dropAssignment(int index) {
         if (index >= 0 && index < m_assignments.size()) {
+            // remove allocated memory
             delete m_assignments[index];
+            // remove pointer from vector of assignments
             m_assignments.removeAt(index);
         }
     }
 };
 
-// window class that populates GUI elements
+/**
+ * @class MainWindow
+ * @brief Core UI class that builds the GUI & handles events.
+ *
+ *         Inherits all standard window behaviors from QMainWindow
+ *         class.
+ */
 class MainWindow : public QMainWindow {
 
 private:
-    // core data state
+    // --- Core Data State --
+    // master list of all created courses
     QVector<Course*> m_courses;
+    // pointer tracking course being views by user
     Course* m_currentCourse = nullptr;
 
-    // UI elements to be accessed across functions
+    // UI elements to be accessed across helper functions
     QStackedWidget *m_contentStack;
     QListWidget *m_courseList;
     QLineEdit *m_courseInput;
@@ -167,6 +239,10 @@ private:
 
 
 public:
+    /**
+     *
+     * @brief Main window constructor - builds entire UI layout on launch.
+     */
     MainWindow(QWidget *parent = nullptr) : QMainWindow(parent) {
         setWindowTitle("Assignment Tracker");
         resize(1000, 600);
@@ -237,7 +313,7 @@ public:
         dashboardLayout -> addWidget(m_courseList);
         dashboardLayout -> addLayout(addCourseLayout);
 
-        // page 1 --> course xyz view
+        // --- Page 1: Course detail & All Assignments view ---
         QWidget *pageCourseDetail = new QWidget(m_contentStack);
         QVBoxLayout *courseLayout = new QVBoxLayout(pageCourseDetail);
         courseLayout -> setContentsMargins(30, 30, 30, 30);
@@ -251,6 +327,7 @@ public:
         courseHeaderLayout -> addWidget(m_courseTitleLabel);
         courseHeaderLayout -> addStretch();
 
+        // Data table setup
         m_assignmentTable = new QTableWidget(0, 4, pageCourseDetail);
         m_assignmentTable -> setHorizontalHeaderLabels({ "Status",
                                                             "Title",
@@ -262,7 +339,7 @@ public:
         m_assignmentTable -> setSelectionBehavior(QAbstractItemView::SelectRows);
         m_assignmentTable -> setShowGrid(false);
 
-        // add/drop controls for assignments
+        // Add/Drop controls for assignments
         QHBoxLayout *addAssignmentLayout = new QHBoxLayout();
         m_assignmentTypeCombo = new QComboBox(pageCourseDetail);
         m_assignmentTypeCombo -> addItems({"Homework", "Exam"});
@@ -290,14 +367,16 @@ public:
         courseLayout -> addWidget(m_assignmentTable);
         courseLayout -> addLayout(addAssignmentLayout);
 
-        // page 2 --> settings
+        // --- Page 2: Settings  (Placeholder)
         QLabel *pageSettings = new QLabel("Settings Menu", m_contentStack);
         pageSettings -> setAlignment(Qt::AlignCenter);
 
+        // --- Register pages into the StackedWidget ----
         m_contentStack -> addWidget(pageDashboard);    // index 0
         m_contentStack -> addWidget(pageCourseDetail); // index 1
         m_contentStack -> addWidget(pageSettings);     // index 2
 
+        // Layout assembly
         mainLayout -> addWidget(sidebar);
         mainLayout -> addWidget(m_contentStack);
 
@@ -314,20 +393,31 @@ public:
 
         refreshCourseList();
 
-        // Qt 'Signals' & 'Slots'
-        // aid in performing actions based on specific input
+        /**
+         * Qt 'Signals' & 'Slots' (event listeners)
+         *
+         * GUI events (like clicks) emit 'Signals' to be listened to
+         * by functions 'Slots'.
+         *
+         * Breakdown of Qt-style lambda functions (anonymous, inline functions)
+         * - [this]   : grants this inline function permission to access MainWindow's
+         *              private member variables (like m_contentStack, m_currentCourse)
+         * - (int id) : The arameter passed by 'idClicked' signal.
+         *              Tells the lambda exactly which button ID was pressed.
+         */
 
-        // sidebar navigation
+        // Event sidebar navigation
         connect(navGroup, &QButtonGroup::idClicked, this, [this](int id) {
             // map sidebar index
             if (id == 0) {
-                m_contentStack -> setCurrentIndex(0);
+                m_contentStack -> setCurrentIndex(0); // Go to dashboard
             }
             if (id == 1) {
-                // initialize current course context to null,
+                // Initialize current course context to null (Aggregate view)
                 // i.e., no specific course is selected
                 m_currentCourse = nullptr;
-                refreshAssignmentTable();
+                refreshAssignmentTable(); // call loop function to refresh table
+
                 // hide controls pertinent to
                 // an individual course
                 m_assignmentTypeCombo -> hide();
@@ -336,12 +426,12 @@ public:
                 m_btnAddAssignment -> hide();
                 m_btnDropAssignment -> hide();
 
-                m_contentStack -> setCurrentIndex(1);
+                m_contentStack -> setCurrentIndex(1); // Go to table view
             }
-            if (id == 2) m_contentStack -> setCurrentIndex(2);
+            if (id == 2) m_contentStack -> setCurrentIndex(2); // Go to settings
         });
 
-        // dashboard: add course
+        // Event: 'Add Course' button clicked
         connect(btnAddCourse, &QPushButton::clicked, this, [this]() {
            if (!m_courseInput -> text().isEmpty()) {
                m_courses.push_back(new Course(m_courseInput -> text()));
@@ -350,11 +440,11 @@ public:
            }
         });
 
-        // receive signal of course clicked --> enter course page
+        // Event: Course item clicked in Dashboard list
         connect(m_courseList, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
             int index = m_courseList -> row(item);
             if (index >= 0 && index < m_courses.size()) {
-                m_currentCourse = m_courses[index];
+                m_currentCourse = m_courses[index]; // Set active context
                 m_courseTitleLabel -> setText(m_currentCourse -> getName());
                 refreshAssignmentTable();
 
@@ -370,19 +460,20 @@ public:
             }
         });
 
-        // receive signal: back button click
+        // Event: 'Back' button clicked from within a course
         connect(backBtn, &QPushButton::clicked, this, [this]() {
             m_currentCourse = nullptr;
             m_contentStack -> setCurrentIndex(0);
         });
 
-        // receive signal: add assignment button click
+        // Event: 'Add Assignment' button clicked
         connect(m_btnAddAssignment, &QPushButton::clicked, this, [this]() {
            if (m_currentCourse && !m_assignmentInput -> text().isEmpty()) {
                QString title = m_assignmentInput -> text();
 
                QDate selectedDate = m_assignmentDate -> date();
 
+               // determine which child object to create based on dropdown
                if (m_assignmentTypeCombo -> currentText() == "Homework") {
                    m_currentCourse -> addAssignment(new Homework(title, selectedDate, 1));
                } else {
@@ -393,13 +484,18 @@ public:
            }
         });
 
-        // receive signal to 'drop' assignment
+        // Event: 'Drop Assignment' button clicked
         connect(m_btnDropAssignment, &QPushButton::clicked, this, [this]() {
            if (m_currentCourse && m_assignmentTable -> currentRow() >= 0) {
                m_currentCourse -> dropAssignment(m_assignmentTable -> currentRow());
                refreshAssignmentTable();
            }
         });
+
+
+        /*
+         * ======= TODO: wrap this if-else block in a try-catch-throw ====
+         */
 
         // load QSS file externally
         QFile styleFile("../style.qss");
@@ -410,7 +506,7 @@ public:
            QTextStream stream(&styleFile);
             // set style of main window to stream of QSS text read from style.qss
             this -> setStyleSheet(stream.readAll());
-            // close file after reading so it doesn't stay open in memory
+            // close file after reading so it doesn't stay open in memory (prevent memory leaks)
             styleFile.close();
         } else {
             // message to print if style file cannot be found
@@ -418,7 +514,9 @@ public:
         }
     }
 
-    // helper function to redraw list of courses on main dashboard
+    /**
+     * @brief Clears & redraws the list of courses on the main dashboard
+     */
     void refreshCourseList() {
         m_courseList -> clear();
         for (Course* c : m_courses) {
@@ -426,18 +524,22 @@ public:
         }
     }
 
-    // helper function that aggregates data from all courses
+    /**
+     * @brief Aggregates data from all courses into single view
+     *        Used by 'All Assignments' sidebar tab
+     */
     void returnAllAssignments() {
         m_courseTitleLabel -> setText("All Active Assignments");
         m_assignmentTable -> setRowCount(0);
 
         for (Course* course : m_courses) {
             QVector<Assignment*>& assignments = course -> getAssignments();
-
+            // Nested loop: iterate over every course, then every assignment inside it
             for (Assignment* current : assignments) {
                 int row = m_assignmentTable -> rowCount();
                 m_assignmentTable -> insertRow(row);
 
+                // Set up interactive checkbox
                 QWidget *checkBoxWidget = new QWidget();
                 QHBoxLayout *checkBoxLayout = new QHBoxLayout(checkBoxWidget);
                 QCheckBox *checkBox = new QCheckBox;
@@ -448,21 +550,27 @@ public:
                 m_assignmentTable -> setCellWidget(row, 0, checkBoxWidget);
 
                 connect(checkBox, &QCheckBox::toggled, this, [current](bool checked) {
-                    current -> setCompleted(checked);
+                    current -> setCompleted(checked); // update underlying object
                 });
 
                 m_assignmentTable -> setItem(row, 1, new QTableWidgetItem(current -> getTitle()));
                 m_assignmentTable -> setItem(row, 2, new QTableWidgetItem(current -> getDueDate().toString("MM/dd/yyyy")));
 
+                // Add course name to assignment details string so user can
+                // easily ID which course the assignment belongs to in the
+                // aggregate "All Assignments" view
                 QString courseDetailString = QString("[%1] %2").arg(course -> getName(), current -> getDetails());
                 m_assignmentTable -> setItem(row, 3, new QTableWidgetItem(courseDetailString));
             }
         }
     }
 
-    // helper function to redraw the assignment table
-    // for the current course
+    /*
+     * @brief Redraws the assignment table only for
+     *        the currently selected course.
+     */
     void refreshAssignmentTable() {
+        // exit out of function if no course is selected
         if (!m_currentCourse) return;
         // clear table
         m_assignmentTable -> setRowCount(0);
@@ -472,7 +580,7 @@ public:
             m_assignmentTable -> insertRow(row);
             Assignment* current = assignments[row];
 
-            // checkbox to mark status
+            // Set up checkbox to mark status
             QWidget *checkBoxWidget = new QWidget();
             QHBoxLayout *checkBoxLayout = new QHBoxLayout(checkBoxWidget);
             QCheckBox *checkBox = new QCheckBox();
@@ -494,8 +602,11 @@ public:
         }
     }
 
-    // destructor that cleans up course objects
-    // stored within course vector
+    /**
+     * @brief Destructor to clean up course objects stored
+     *        within the course vector.
+     *        Prevents memory leaks upon application exit.
+     */
     ~MainWindow() {
         for (Course* c : m_courses) {
             delete c;
@@ -503,10 +614,27 @@ public:
     }
 };
 
+/**
+ * @brief Main entry point of the application.
+ * @param argc The number of command line arguments.
+ *             Although no CLI-args are passed by the user
+ *             to the app, the OS always passes at least 1 -
+ *             the name of the executable/executable path.
+ * @param argv The array of command line arguments.
+ *             Handed directly over to QApplication so Qt can
+ *             automatically handle OS-level paths & built-in
+ *             Qt flags.
+ * @return An integer exist code (0 for successful execution)
+ *
+ *         This function initializes the Qt GUI framework, builds the
+ *         main window and enters the event loop (app.exec()) so the
+ *         application stays open & responds to user input.
+ *
+ */
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     MainWindow window;
-    window.show();
-    return app.exec();
+    window.show(); // display the UI
+    return app.exec(); // enter event loop
 }
