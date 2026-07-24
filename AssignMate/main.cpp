@@ -16,7 +16,7 @@
 #include <QTableWidget>
 #include <QComboBox>
 #include <QFile>       // allow Qt to find file (style.qss)
-#include <QTextStream> // allow read of stream of text from style.qss
+#include <QTextStream> // allow reading stream of text from style.qss
 #include <QDebug>      // print warning if external qss file can't be found
 #include <QDateEdit>   // QT date picker object
 #include <stdexcept>  // standard C++ exceptions lib
@@ -24,11 +24,11 @@
 
 /**
  * @class Assignment
- * @brief Abstract base class representing a generic schoiol assignment
+ * @brief Abstract base class representing a generic school assignment
  *
  * Demonstrates encapsulation by keeping member variables private
  * forcing external code to use public getter/setter methods.
- * Demonstrates abstraction by including pure virtual function
+ * Demonstrates abstraction by including pure virtual functions
  */
 class Assignment {
 private:
