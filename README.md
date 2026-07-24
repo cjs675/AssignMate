@@ -4,20 +4,31 @@
 
 ### Framework: QT GUI 
 
-### Features:  
+AssignMate is a lightweight, GUI-based desktop app written in modern C++ used to track university courses and their assignments.
+This project was built using core OOP principles, GUI event-driven programming, as well as dynamic memory management using the Qt Framework. 
 
-- input classes 
-    - input assignments from respective classes  
-        - added to list 
-    - include: 
-        - due dates 
-        - mark as complete (checkbox) 
-        - assignments completed vs. to complete  
-        - sort:
-            - past vs. present  
-- store user data locally (SQLite)  
-    - use SQL as "single source of truth" 
-    - data persists on program exit
-    - **INSERT** new assignment
-    - **UPDATE** mark as complete 
-    - **SELECT** fetch & sort past vs present 
+### Features
+- Course Management: add dynamically generated courses 
+- Assignment Tracking: input individual assignments (Homework, Exams) to their given courses 
+- Aggregated Dashboard: View all assignments across all courses 
+- Dynamic Table UI: Assignments include titles, due dates, interactive completion checkboxes, and specific polymorphic details (ex. exam duration, homework task count)
+
+### Technical Architecture
+The application was built from scratch using pure C++ & core Qt modules, such as
+    - QtWidgets (main library that contains all visual UI elements)
+    - QApplication (base manager class that runs the infinite event loop)
+    - QMainWindow (base-inherited class that builds the main UI canvas and holds layouts of UI elements) 
+
+
+#### Core OOP Concepts Used: 
+- **Encapsulation & Data Hiding:** strict use of **private** member variables accessed only through **public** Getters/Setters 
+- **Composition:** The ```Course``` class acts as the owner of an interal ```QVector```, managing the memory of the assignments it aggregates 
+- **Inheritance & Runtime Polymorphism:** 
+    - An abstract ```Assignment``` base class containing a **pure virtual function**
+    - ```Exam``` and ```Homework``` derived classes that override the virtual function 
+    - A ```QVector<Assignment*>``` that uses pointers to store mixed data types and dynamically invoke the correct overriden methods at runtime 
+
+#### UI Styling 
+The application uses an external Qt Stylesheet ```style.qss``` loaded at runtime via ```QFile``` and ```QTextStream``` 
+The sheet is written to format the window in a sleek, modern 'dark-mode' aesthetic. 
+A ```try-catch``` block is used to handle exceptions if the stylesheet is missing/cannot be located.  
