@@ -21,24 +21,36 @@
 #include <QDateEdit>   // QT date picker object
 
 
-
-// BASE class
+/**
+ * @class Assignment
+ * @brief Abstract base class representing a generic schoiol assignment
+ *
+ * Demonstrates encapsulation by keeping member variables private
+ * forcing external code to use public getter/setter methods.
+ * Demonstrates abstraction by including pure virtual function
+ */
 class Assignment {
 private:
     QString m_title;
     QDate m_dueDate;
     bool m_isCompleted;
 
-
 public:
-    Assignment(QString title, QDate dueDate, bool isCompleted = false) {
+    /**
+     * @brief Constructor for the base assignment class
+     */
+    Assignment(QString &title, QDate &dueDate, bool isCompleted = false) {
         m_title = title;
         m_dueDate = dueDate;
         m_isCompleted = isCompleted;
     }
 
-    // destructor marked as virtual to ensure cleanup
-    // of proper object
+    /**
+     * @brief Virtual Destructor
+     * Ensures when child object (such as Exam #1) is
+     * deleted via a base pointer the child's destructor
+     * is called first --> preventing memory leaks
+     */
     virtual ~Assignment() {}
 
     // getters & setters
@@ -58,10 +70,15 @@ public:
         m_isCompleted = status;
     }
 
-    // marked as virtual to return details of
-    // respective Assignment object/child classes
-    // such as Exam, Homework, etc
-    // set to = 0 so every child class is its own
+    /**
+     *  @brief Pure virtual function for polymorphic behavior
+     *  @return A formatted string detailing specific assignment type
+     *
+     *  Set to "=0" so a raw 'Assignment' object cannot be
+     *  instantiated.
+     *  Every child class has to write their own version of this function.
+     *
+     */
     virtual QString getDetails() const = 0;
 };
 
