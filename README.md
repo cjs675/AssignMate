@@ -18,10 +18,10 @@ This project was built using core OOP principles, GUI event-driven programming, 
 - **Dynamic Table UI**: Assignments include titles, due dates, interactive completion checkboxes, and specific polymorphic details (ex. exam duration, homework task count)
 
 ### Technical Architecture
-The application was built from scratch using pure C++ & core Qt modules, such as<br>
-    - QtWidgets (main library that contains all visual UI elements)<br>
-    - QApplication (base manager class that runs the infinite event loop)<br>
-    - QMainWindow (base-inherited class that builds the main UI canvas and holds layouts of UI elements)<br>
+The application was built from scratch using pure C++ & core Qt modules, such as:<br>
+- QtWidgets (main library that contains all visual UI elements)<br>
+- QApplication (base manager class that runs the infinite event loop)<br>
+- QMainWindow (base-inherited class that builds the main UI canvas and holds layouts of UI elements)<br>
 
 
 #### Core OOP Concepts Used: 
