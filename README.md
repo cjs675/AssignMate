@@ -19,9 +19,9 @@ This project was built using core OOP principles, GUI event-driven programming, 
 
 ### Technical Architecture
 The application was built from scratch using pure C++ & core Qt modules, such as:<br>
-- QtWidgets (main library that contains all visual UI elements)<br>
-- QApplication (base manager class that runs the infinite event loop)<br>
-- QMainWindow (base-inherited class that builds the main UI canvas and holds layouts of UI elements)<br>
+- **QtWidgets** (main library that contains all visual UI elements)<br>
+- **QApplication** (base manager class that runs the infinite event loop)<br>
+- **QMainWindow** (base-inherited class that builds the main UI canvas and holds layouts of UI elements)<br>
 
 
 #### Core OOP Concepts Used: 
