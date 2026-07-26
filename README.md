@@ -1,7 +1,8 @@
 # AssignMate 
 
-<img src="assets/logo.png" alt="AssignMate Logo" width = "60%" /> 
-
+<p align="center">
+    <img src="assets/logo.png" alt="AssignMate Logo" width = "60%" /> 
+</p>
 ### Purpose: Design a minimal, GUI-based assignment tracker 
 
 ### Framework: QT GUI 
