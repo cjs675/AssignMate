@@ -1,5 +1,7 @@
 # AssignMate 
 
+![AssignMate Logo](assets/logo.png) 
+
 ### Purpose: Design a minimal, GUI-based assignment tracker 
 
 ### Framework: QT GUI 
