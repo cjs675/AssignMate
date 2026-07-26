@@ -33,6 +33,6 @@ The application was built from scratch using pure C++ & core Qt modules, such as
     - A ```QVector<Assignment*>``` that uses pointers to store mixed data types and dynamically invoke the correct overriden methods at runtime 
 
 #### UI Styling 
-The application uses an external Qt Stylesheet ```style.qss``` loaded at runtime via ```QFile``` and ```QTextStream``` 
-The sheet is written to format the window in a sleek, modern 'dark-mode' aesthetic. 
-A ```try-catch``` block is used to handle exceptions if the stylesheet is missing/cannot be located.  
+The application uses an external Qt Stylesheet ```style.qss``` loaded at runtime via ```QFile``` and ```QTextStream```<br>
+The sheet is written to format the window in a sleek, modern 'dark-mode' aesthetic.<br> 
+A ```try-catch``` block is used to handle exceptions if the stylesheet is missing/cannot be located.<br> 
