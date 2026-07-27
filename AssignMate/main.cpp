@@ -35,15 +35,17 @@ private:
     QString m_title;
     QDate m_dueDate;
     bool m_isCompleted;
+    QString m_assignmentTopicInput;
 
 public:
     /**
      * @brief Constructor for the base assignment class
      */
-    Assignment(QString &title, QDate &dueDate, bool isCompleted = false) {
+    Assignment(QString &title, QDate &dueDate, bool isCompleted = false, QString assignmentTopicInput = "") {
         m_title = title;
         m_dueDate = dueDate;
         m_isCompleted = isCompleted;
+        m_assignmentTopicInput = assignmentTopicInput;
     }
 
     /**
@@ -115,16 +117,16 @@ public:
  */
 class Homework : public Assignment {
 private:
-    int m_tasks;
+    QString m_topic;
 public:
-    Homework(QString title, QDate dueDate, int tasks)
-        : Assignment(title, dueDate), m_tasks(tasks) {}
+    Homework(QString title, QDate dueDate, QString topic)
+        : Assignment(title, dueDate), m_topic(topic) {}
 
     /**
      * @brief Formats the child class's unique task values for the UI table
      */
     QString getDetails() const override {
-        return QString("Homework: %1 Tasks").arg(m_tasks);
+        return QString("Homework: %1: ").arg(m_topic);
     }
 };
 
@@ -237,6 +239,7 @@ private:
     QDateEdit *m_assignmentDate;
     QPushButton *m_btnAddAssignment;
     QPushButton *m_btnDropAssignment;
+    QLineEdit *m_assignmentTopicInput;
 
 
 public:
@@ -382,23 +385,26 @@ public:
         mainLayout -> addWidget(m_contentStack);
 
         // initial dummy data
-        Course* software = new Course("Software Testing");
+        Course* testing = new Course("Software Testing");
         // set: due date 2wks away from current date
         // expected time = 60min
-        software -> addAssignment(new Homework("Assignment 4", QDate::currentDate().addDays(14), 60));
-        m_courses.push_back(software);
+        testing -> addAssignment(new Homework("Assignment 1", QDate::currentDate().addDays(14), "Unit Tests"));
+        m_courses.push_back(testing);
 
         Course* math = new Course("Calculus 3");
         math -> addAssignment(new Exam("Midterm Exam", QDate::currentDate().addDays(7), 120));
         m_courses.push_back(math);
 
+        Course*  sysAdmin = new Course("Sys Admin & Programming");
+        sysAdmin -> addAssignment(new Homework("Lab 1", QDate::currentDate().addDays(14), "Bash Scipts"));
+        m_courses.push_back(sysAdmin);
         refreshCourseList();
 
         /**
          * Qt 'Signals' & 'Slots' (event listeners)
          *
          * GUI events (like clicks) emit 'Signals' to be listened to
-         * by functions 'Slots'.
+         * by functions aka 'Slots'.
          *
          * Breakdown of Qt-style lambda functions (anonymous, inline functions)
          * - [this]   : grants this inline function permission to access MainWindow's
@@ -476,7 +482,7 @@ public:
 
                // determine which child object to create based on dropdown
                if (m_assignmentTypeCombo -> currentText() == "Homework") {
-                   m_currentCourse -> addAssignment(new Homework(title, selectedDate, 1));
+                   m_currentCourse -> addAssignment(new Homework(title, selectedDate, m_assignmentTopicInput-> text()));
                } else {
                    m_currentCourse -> addAssignment(new Exam(title, selectedDate, 90));
                }
