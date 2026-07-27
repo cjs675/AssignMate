@@ -1,4 +1,4 @@
-<h1 align="center">AssignMate</h1>
+# AssignMate 
 
 <p align="center">
     <img src="assets/AssignMateLogo_no_bg.png" alt="AssignMate Logo" width = "60%" /> 
