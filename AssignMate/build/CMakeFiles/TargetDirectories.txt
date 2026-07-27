@@ -1,5 +1,0 @@
-/Users/chrissilva/environment/school/cop_3003/projects/finalProjectTest/build/CMakeFiles/Tracker.dir
-/Users/chrissilva/environment/school/cop_3003/projects/finalProjectTest/build/CMakeFiles/edit_cache.dir
-/Users/chrissilva/environment/school/cop_3003/projects/finalProjectTest/build/CMakeFiles/rebuild_cache.dir
-/Users/chrissilva/environment/school/cop_3003/projects/finalProjectTest/build/CMakeFiles/Tracker_autogen_timestamp_deps.dir
-/Users/chrissilva/environment/school/cop_3003/projects/finalProjectTest/build/CMakeFiles/Tracker_autogen.dir
