@@ -321,6 +321,7 @@ public:
         dashboardLayout -> setContentsMargins(30, 30, 30, 30);
 
         QLabel *dashboardTitle = new QLabel("My Courses", pageDashboard);
+        dashboardTitle -> setAlignment(Qt::AlignCenter);
         dashboardTitle -> setStyleSheet("font-size: 24px; "
                                        "font-weight: bold;"
                                        " margin-bottom: 10px");
@@ -343,6 +344,9 @@ public:
         // --- Page 1: Course detail & All Assignments view ---
         QWidget *pageCourseDetail = new QWidget(m_contentStack);
         QVBoxLayout *courseLayout = new QVBoxLayout(pageCourseDetail);
+        QWidget *rightHeaderSpacer = new QWidget(pageCourseDetail);
+        rightHeaderSpacer -> setFixedWidth(100);
+
         courseLayout -> setContentsMargins(30, 30, 30, 30);
 
         QHBoxLayout *courseHeaderLayout = new QHBoxLayout;
@@ -350,10 +354,13 @@ public:
         backBtn -> setFixedWidth(100);
         m_courseTitleLabel = new QLabel("Course Name", pageCourseDetail);
         m_courseTitleLabel -> setStyleSheet("font-size: 24px; font-weight: bold;");
+        m_courseTitleLabel -> setAlignment(Qt::AlignCenter);
 
         courseHeaderLayout -> addWidget(backBtn);
+        courseHeaderLayout -> addStretch();
         courseHeaderLayout -> addWidget(m_courseTitleLabel);
         courseHeaderLayout -> addStretch();
+        courseHeaderLayout -> addWidget(rightHeaderSpacer);
 
         // Data table setup
         m_assignmentTable = new QTableWidget(0, 4, pageCourseDetail);
