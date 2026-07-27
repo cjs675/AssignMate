@@ -426,12 +426,13 @@ public:
                 // Initialize current course context to null (Aggregate view)
                 // i.e., no specific course is selected
                 m_currentCourse = nullptr;
-                refreshAssignmentTable(); // call loop function to refresh table
+                returnAllAssignments(); // call loop function to refresh table
 
                 // hide controls pertinent to
                 // an individual course
                 m_assignmentTypeCombo -> hide();
                 m_assignmentInput -> hide();
+                m_assignmentTopicInput -> hide();
                 m_assignmentDate -> hide();
                 m_btnAddAssignment -> hide();
                 m_btnDropAssignment -> hide();
