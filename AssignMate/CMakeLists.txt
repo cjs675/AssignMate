@@ -15,7 +15,7 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets Sql)
 
 # Create executable
 add_executable(Tracker main.cpp
-               resources.qrc
+                 resources.qrc
 ) 
 
 # Link both Qt6 libraries to executable
