@@ -126,7 +126,7 @@ public:
      * @brief Formats the child class's unique task values for the UI table
      */
     QString getDetails() const override {
-        return QString("Homework: %1: ").arg(m_topic);
+        return QString("Homework: %1").arg(m_topic);
     }
 };
 
@@ -387,7 +387,7 @@ public:
         // initial dummy data
         Course* testing = new Course("Software Testing");
         // set: due date 2wks away from current date
-        // expected time = 60min
+        // Topic: "Unit Tests"
         testing -> addAssignment(new Homework("Assignment 1", QDate::currentDate().addDays(14), "Unit Tests"));
         m_courses.push_back(testing);
 
