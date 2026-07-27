@@ -349,6 +349,8 @@ public:
         m_assignmentTypeCombo -> addItems({"Homework", "Exam"});
         m_assignmentInput= new QLineEdit(pageCourseDetail);
         m_assignmentInput -> setPlaceholderText("New assignment title: ");
+        m_assignmentTopicInput = new QLineEdit(pageCourseDetail);
+        m_assignmentTopicInput -> setPlaceholderText("Topic: ");
 
         m_assignmentDate = new QDateEdit(pageCourseDetail);
         m_assignmentDate -> setDate(QDate::currentDate());  // default to current date
@@ -363,6 +365,7 @@ public:
 
         addAssignmentLayout -> addWidget(m_assignmentTypeCombo);
         addAssignmentLayout -> addWidget(m_assignmentInput);
+        addAssignmentLayout -> addWidget(m_assignmentTopicInput);
         addAssignmentLayout -> addWidget(m_assignmentDate);
         addAssignmentLayout -> addWidget(m_btnAddAssignment);
         addAssignmentLayout -> addWidget(m_btnDropAssignment);
@@ -486,7 +489,9 @@ public:
                } else {
                    m_currentCourse -> addAssignment(new Exam(title, selectedDate, 90));
                }
+               m_assignmentTopicInput -> clear();
                m_assignmentInput -> clear();
+               m_assignmentDate -> setDate(QDate::currentDate());
                refreshAssignmentTable();
            }
         });
