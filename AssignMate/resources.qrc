@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>style.qss</file>
+        <file>style.qss</file> 
+        <file alias = "logo.png">../assets/AssignMateLogo_no_bg.png</file>
     </qresource>
 </RCC>

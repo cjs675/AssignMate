@@ -19,7 +19,8 @@
 #include <QTextStream> // allow reading stream of text from style.qss
 #include <QDebug>      // print warning if external qss file can't be found
 #include <QDateEdit>   // QT date picker object
-#include <stdexcept>  // standard C++ exceptions lib
+#include <stdexcept>   // standard C++ exceptions lib
+#include <QPixmap>     // Qt library to display images (for logo)
 
 
 /**
@@ -327,9 +328,18 @@ public:
         backBtn -> setFixedWidth(100);
         m_courseTitleLabel = new QLabel("Course Name", pageCourseDetail);
         m_courseTitleLabel -> setStyleSheet("font-size: 24px; font-weight: bold;");
+
+        // add logo to header layout
+        QLabel *logoLabel = new QLabel(pageCourseDetail);
+        QPixmap logo(":/logo.png");
+        logoLabel -> setPixmap(
+            logo.scaled(70, 70, Qt::KeepAspectRatio, Qt::SmoothTransformation)
+            );
+
         courseHeaderLayout -> addWidget(backBtn);
         courseHeaderLayout -> addWidget(m_courseTitleLabel);
         courseHeaderLayout -> addStretch();
+        courseHeaderLayout -> addWidget(logoLabel);
 
         // Data table setup
         m_assignmentTable = new QTableWidget(0, 4, pageCourseDetail);
