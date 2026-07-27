@@ -14,7 +14,9 @@ set(CMAKE_AUTOUIC ON)
 find_package(Qt6 REQUIRED COMPONENTS Widgets Sql)
 
 # Create executable
-add_executable(Tracker main.cpp)
+add_executable(Tracker main.cpp
+               resources.qrc
+) 
 
 # Link both Qt6 libraries to executable
 target_link_libraries(Tracker PRIVATE Qt6::Widgets Qt6::Sql)
