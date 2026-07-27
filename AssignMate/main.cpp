@@ -494,11 +494,11 @@ public:
         });
 
         // load QSS file externally
-        QFile styleFile("../style.qss");
+        QFile styleFile(":/style.qss");
         try {
             // check if file exists, can be read & is of type text
             // bitwise OR flag passed in to make sure both conditions are met
-            if (styleFile.open(QFile::ReadOnly | QFile::Text)) {
+            if (!styleFile.open(QFile::ReadOnly | QFile::Text)) {
                 throw std::runtime_error("Could not find or open style.qss...");
             }
             // style.qss passed by reference into stream
