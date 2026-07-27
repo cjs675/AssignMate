@@ -293,6 +293,28 @@ public:
 
         m_contentStack = new QStackedWidget(this);
 
+        // -- Shared top-right content panel with persistent logo --
+        QWidget *rightPanel = new QWidget(this);
+        QVBoxLayout *rightPanelLayout = new QVBoxLayout(rightPanel);
+        rightPanelLayout -> setContentsMargins(0, 0, 0, 0);
+        rightPanelLayout -> setSpacing(0);
+
+        QHBoxLayout *globalTopBar = new QHBoxLayout();
+        globalTopBar -> setContentsMargins(30, 20, 30, 0);
+
+        QLabel *logoLabel = new QLabel(rightPanel);
+        QPixmap logo(":/logo.png");
+        logoLabel -> setPixmap(
+            logo.scaled(150, 150, Qt::KeepAspectRatio, Qt::SmoothTransformation)
+            );
+
+        globalTopBar -> addStretch();
+        globalTopBar -> addWidget(logoLabel);
+        rightPanelLayout -> addLayout(globalTopBar);
+        // Wrap m_contentStack in a right-side panel so logo
+        // remains visible across all pages
+        rightPanelLayout -> addWidget(m_contentStack);
+
         // page 0 --> dashboard for all courses
         QWidget *pageDashboard = new QWidget(m_contentStack);
         QVBoxLayout *dashboardLayout = new QVBoxLayout(pageDashboard);
@@ -329,17 +351,9 @@ public:
         m_courseTitleLabel = new QLabel("Course Name", pageCourseDetail);
         m_courseTitleLabel -> setStyleSheet("font-size: 24px; font-weight: bold;");
 
-        // add logo to header layout
-        QLabel *logoLabel = new QLabel(pageCourseDetail);
-        QPixmap logo(":/logo.png");
-        logoLabel -> setPixmap(
-            logo.scaled(70, 70, Qt::KeepAspectRatio, Qt::SmoothTransformation)
-            );
-
         courseHeaderLayout -> addWidget(backBtn);
         courseHeaderLayout -> addWidget(m_courseTitleLabel);
         courseHeaderLayout -> addStretch();
-        courseHeaderLayout -> addWidget(logoLabel);
 
         // Data table setup
         m_assignmentTable = new QTableWidget(0, 4, pageCourseDetail);
@@ -395,7 +409,7 @@ public:
 
         // Layout assembly
         mainLayout -> addWidget(sidebar);
-        mainLayout -> addWidget(m_contentStack);
+        mainLayout -> addWidget(rightPanel);
 
         // initial dummy data
         Course* testing = new Course("Software Testing");
