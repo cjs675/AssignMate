@@ -43,7 +43,7 @@ public:
     /**
      * @brief Constructor for the base assignment class
      */
-    Assignment(QString &title, QDate &dueDate, bool isCompleted = false, QString assignmentTopicInput = "") {
+    Assignment(const QString &title, const QDate &dueDate, bool isCompleted = false, const QString& assignmentTopicInput = "") {
         m_title = title;
         m_dueDate = dueDate;
         m_isCompleted = isCompleted;
@@ -52,7 +52,7 @@ public:
 
     /**
      * @brief Virtual Destructor
-     * Ensures when child object (such as Exam #1) is
+     * Ensures when a child object (such as Exam #1) is
      * deleted via a base pointer, the child's destructor
      * is called first --> preventing memory leaks
      */
@@ -100,7 +100,7 @@ private:
     int m_minuteDuration;
 
 public:
-    Exam(QString title, QDate dueDate, int minuteDuration)
+    Exam(const QString& title, const QDate& dueDate, int minuteDuration)
         : Assignment(title, dueDate), m_minuteDuration(minuteDuration) {}
 
     /**
@@ -121,9 +121,8 @@ class Homework : public Assignment {
 private:
     QString m_topic;
 public:
-    Homework(QString title, QDate dueDate, QString topic)
+    Homework(const QString& title, const QDate& dueDate, const QString& topic)
         : Assignment(title, dueDate), m_topic(topic) {}
-
     /**
      * @brief Formats the child class's unique task values for the UI table
      */
@@ -400,7 +399,7 @@ public:
         m_assignmentInput= new QLineEdit(pageCourseDetail);
         m_assignmentInput -> setPlaceholderText("Title: ");
         m_assignmentTopicInput = new QLineEdit(pageCourseDetail);
-        m_assignmentTopicInput -> setPlaceholderText("Topic/Duration: ");
+        m_assignmentTopicInput -> setPlaceholderText("Topic: ");
 
         m_assignmentDate = new QDateEdit(pageCourseDetail);
         m_assignmentDate -> setDate(QDate::currentDate());  // default to current date
@@ -482,7 +481,7 @@ public:
         // initial dummy data
         Course* testing = new Course("Software Testing");
         // set: due date 2wks away from current date
-        // Topic: "Unit Tests"
+        // Topic: Unit Tests
         testing -> addAssignment(new Homework("Assignment 1", QDate::currentDate().addDays(14), "Unit Tests"));
         m_courses.push_back(testing);
 
@@ -491,7 +490,7 @@ public:
         m_courses.push_back(math);
 
         Course*  sysAdmin = new Course("Sys Admin & Programming");
-        sysAdmin -> addAssignment(new Homework("Lab 1", QDate::currentDate().addDays(14), "Bash Scipts"));
+        sysAdmin -> addAssignment(new Homework("Lab 1", QDate::currentDate().addDays(14), "Bash Scripts"));
         m_courses.push_back(sysAdmin);
         refreshCourseList();
 
@@ -574,6 +573,7 @@ public:
                 // if a specified course is now active
                 m_assignmentTypeCombo -> show();
                 m_assignmentInput -> show();
+                m_assignmentTopicInput -> show();
                 m_assignmentDate -> show();
                 m_btnAddAssignment -> show();
                 m_btnDropAssignment -> show();
@@ -617,9 +617,21 @@ public:
 
                // determine which child object to create based on dropdown
                if (m_assignmentTypeCombo -> currentText() == "Homework") {
-                   m_currentCourse -> addAssignment(new Homework(title, selectedDate, m_assignmentTopicInput-> text()));
+                   QString topic = m_assignmentTopicInput -> text();
+                   if (topic.isEmpty()) {
+                       topic = "General"; // Set default if topic = empty
+                   }
+                   m_currentCourse -> addAssignment(new Homework(title, selectedDate, topic));
                } else {
-                   m_currentCourse -> addAssignment(new Exam(title, selectedDate, 90));
+                   // 'bool ok' used as a safety check when converting
+                   // from text string to number in Qt
+                   bool ok;
+                   int duration = m_assignmentTopicInput -> text().toInt(&ok);
+                   if (!ok || duration <= 0) {
+                       // Default duration set to 90min if input is invalid
+                       duration = 90;
+                   }
+                   m_currentCourse -> addAssignment(new Exam(title, selectedDate, duration));
                }
                m_assignmentTopicInput -> clear();
                m_assignmentInput -> clear();
@@ -634,6 +646,17 @@ public:
                m_currentCourse -> dropAssignment(m_assignmentTable -> currentRow());
                refreshAssignmentTable();
            }
+        });
+
+        // Event: Assignment type changed
+        // Update placeholder between Exam (Duration (Mins):)
+        // and Homework (topic)
+        connect(m_assignmentTypeCombo, &QComboBox::currentTextChanged, this, [this](const QString &text) {
+            if (text == "Homework") {
+                m_assignmentTopicInput -> setPlaceholderText("Topic: ");
+            } else {
+                m_assignmentTopicInput -> setPlaceholderText("Duration (Mins): ");
+            }
         });
 
         // Event: 'Mark Complete' button clicked
