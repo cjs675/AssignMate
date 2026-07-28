@@ -14,10 +14,12 @@
 #include <QLineEdit>
 #include <QTableWidget>
 #include <QComboBox>
+#include <QBrush>       // Qt library for filling colors & patterns
+#include <QColor>       // Qt library for colors
 #include <QFile>       // allow Qt to find file (style.qss)
 #include <QTextStream> // allow reading stream of text from style.qss
 #include <QDebug>      // print warning if external qss file can't be found
-#include <QDateEdit>   // QT date picker object
+#include <QDateEdit>   // Qt date picker object
 #include <stdexcept>   // standard C++ exceptions lib
 #include <QPixmap>     // Qt library to display images (for logo)
 
@@ -646,6 +648,14 @@ public:
                 QString statusText = current -> isCompleted() ? "Complete" : "Incomplete";
                 QTableWidgetItem *itemStatus = new QTableWidgetItem(statusText);
                 itemStatus -> setTextAlignment(Qt::AlignCenter);
+
+                // Display completion status with color indicator
+                if (current -> isCompleted()) {
+                    itemStatus -> setForeground(QBrush(QColor("#2e7d32")));
+                } else {
+                    itemStatus -> setForeground(QBrush(QColor("#FF3D4D")));
+                }
+
                 m_assignmentTable -> setItem(row, 0, itemStatus);
 
                 m_assignmentTable -> setItem(row, 1, new QTableWidgetItem(course -> getName()));
@@ -686,6 +696,13 @@ public:
             QString statusText = current -> isCompleted() ? "Complete" : "Incomplete";
             QTableWidgetItem *itemStatus = new QTableWidgetItem(statusText);
             itemStatus -> setTextAlignment(Qt::AlignCenter);
+
+            // Display completion status with color indicator
+            if (current -> isCompleted()) {
+                itemStatus -> setForeground(QBrush(QColor("#2e7d32")));
+            } else {
+                itemStatus -> setForeground(QBrush(QColor("#FF3D4D")));
+            }
             m_assignmentTable -> setItem(row, 0, itemStatus);
 
             m_assignmentTable -> setItem(row, 1, new QTableWidgetItem(current -> getTitle()));
