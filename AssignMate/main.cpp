@@ -401,9 +401,11 @@ public:
         m_btnDropAssignment -> setObjectName("dangerBtn");
 
         m_btnMarkComplete = new QPushButton("Mark Complete", pageCourseDetail);
-        m_btnMarkComplete -> setObjectName("actionBtn");
+        m_btnMarkComplete -> setObjectName("completeBtn");
+        m_btnMarkComplete -> setFixedWidth(140);
         m_btnMarkIncomplete = new QPushButton("Mark Incomplete", pageCourseDetail);
-        m_btnMarkIncomplete -> setObjectName("actionBtn");
+        m_btnMarkIncomplete -> setObjectName("incompleteBtn");
+        m_btnMarkIncomplete-> setFixedWidth(140);
 
         addAssignmentLayout -> addWidget(m_assignmentTypeCombo);
         addAssignmentLayout -> addWidget(m_assignmentInput);
@@ -411,6 +413,7 @@ public:
         addAssignmentLayout -> addWidget(m_assignmentDate);
         addAssignmentLayout -> addWidget(m_btnAddAssignment);
         addAssignmentLayout -> addWidget(m_btnDropAssignment);
+        addAssignmentLayout -> addStretch();
         addAssignmentLayout -> addWidget(m_btnMarkComplete);
         addAssignmentLayout -> addWidget(m_btnMarkIncomplete);
 
