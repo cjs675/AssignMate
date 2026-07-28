@@ -3,105 +3,113 @@
 
 /* Main window & text elements */ 
 
-QMainWindow, QStackedWidget { 
-        background-color: #0b1421;
-    } 
+QMainWindow, QStackedWidget {
+    background-color: #0b1421;
+}
 QLabel {
-        color: #ffffff;
-        font-size: 18px;
-    }
+    color: #ffffff;
+    font-size: 18px;
+}
 #sidebarWidget {
-        background-color: #131c2d;
-        border-right: 1px solid #1f2a3f;
-    }
+    background-color: #131c2d;
+    border-right: 1px solid #1f2a3f;
+}
 
 /* Sidebar navi buttons */
 QPushButton {
-        background-color: transparent;
-        color: #8a99af;
-        text-align: center;
-        padding: 12px 20px;
-        border: none;
-        border-left: 3px solid transparent;
-        font-weight: bold;
-        font-size: 14px;
-    }
+    background-color: transparent;
+    color: #8a99af;
+    text-align: center;
+    padding: 12px 20px;
+    border: none;
+    border-left: 3px solid transparent;
+    font-weight: bold;
+    font-size: 14px;
+}
 QPushButton:hover {
-        background-color: #1a2536;
-        color: #ffffff;
-    }
+    background-color: #1a2536;
+    color: #ffffff;
+}
 
 QPushButton:checked {
-        border-left: 3px solid #2979ff;
-        color: #ffffff;
-        background-color: #1a2536;
-    }
+    border-left: 3px solid #2979ff;
+    color: #ffffff;
+    background-color: #1a2536;
+}
 
 /* Inputs & table elements */ 
 
 QLineEdit, QComboBox, QListWidget, QTableWidget {
-        background-color: #131c2d;
-        color: #ffffff;
-        border: 1px solid #1f2a3f;
-        border-radius: 6px;
-        padding: 5px;
-    }
+    background-color: #131c2d;
+    color: #ffffff;
+    border: 1px solid #1f2a3f;
+    border-radius: 6px;
+    padding: 5px;
+}
 
 QComboBox QAbstractItemView {
-        background-color: #131c2d;
-        color: #ffffff;
-        border: 1px solid #1f2a3f;
-        selection-background-color: #1a2536;
-        selection-color: #2979ff;
-        outline: none;
-        /* force popup list to be wider than button
-        * so we can see all elements in drop-down */
-        min-width: 120px;
-    }
+    background-color: #131c2d;
+    color: #ffffff;
+    border: 1px solid #1f2a3f;
+    selection-background-color: #1a2536;
+    selection-color: #2979ff;
+    outline: none;
+    /* force popup list to be wider than button
+    * so we can see all elements in drop-down */
+    min-width: 120px;
+}
 
 QListWidget::item {
-        padding: 10px;
-        border-bottom: 1px solid #1f2a3f;
-    }
+    padding: 10px;
+    border-bottom: 1px solid #1f2a3f;
+}
 
 QListWidget::item:selected {
-        background-color: #1a2536;
-        color: #2979ff;
-    }
+    background-color: #1a2536;
+    color: #2979ff;
+}
 
 
 /* Action buttons */ 
 
-QPushButton#actionBtn, QPushButton#dangerBtn {
+QPushButton#actionBtn, QPushButton#dangerBtn,
+QPushButton#completeBtn, QPushButton#incompleteBtn {
     padding: 4px 12px;
     font-size: 12px;
     border-radius: 6px;
     font-weight: bold;
-
-    }
+}
 QPushButton#actionBtn {
-        background-color: #2979ff;
-        color: white;
-    }
+    background-color: #2979ff;
+    color: white;
+}
 
 QPushButton#dangerBtn {
-        background-color: #d32f2f;
-        color: white;
-    }
+    background-color: #d32f2f;
+    color: white;
+}
+QPushButton#completeBtn {
+    background-color: #2e7d32;
+    color: white;
+}
+QPushButton#incompleteBtn {
+    background-color: #FF3D4D;
+    color: white;
+}
 
 
 /* Table headers */
 
 QHeaderView::section {
-        background-color: #0b1421; 
-        color: #8a99af;
-        padding: 5px;
-        border: none;
-        border-bottom: 1px solid #1f2a3f;
-        font-weight: bold;
-    }
+    background-color: #0b1421;
+    color: #8a99af;
+    padding: 5px;
+    border: none;
+    border-bottom: 1px solid #1f2a3f;
+    font-weight: bold;
+}
 
 QTableWidget::item {
-        border-bottom: 1px solid #1f2a3f;
-        padding: 10px;
-    }
+    border-bottom: 1px solid #1f2a3f;
+    padding: 10px;
+}
