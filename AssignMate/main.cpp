@@ -345,9 +345,20 @@ public:
         addCourseLayout -> addWidget(m_courseInput);
         addCourseLayout -> addWidget(btnAddCourse);
 
+        // Layout for course management buttons
+        QHBoxLayout *courseManagementLayout = new QHBoxLayout();
+        QPushButton *btnOpenCourse = new QPushButton("Open Selected Course", pageDashboard);
+        btnOpenCourse -> setObjectName("actionBtn");
+        QPushButton *btnDropCourse = new QPushButton("Drop Course", pageDashboard);
+        btnDropCourse -> setObjectName("dangerBtn");
+        courseManagementLayout -> addStretch();
+        courseManagementLayout -> addWidget(btnOpenCourse);
+        courseManagementLayout -> addWidget(btnDropCourse);
+
         dashboardLayout -> addWidget(dashboardTitle);
         dashboardLayout -> addWidget(m_courseList);
         dashboardLayout -> addLayout(addCourseLayout);
+        dashboardLayout -> addLayout(courseManagementLayout);
 
         // --- Page 1: Course detail & All Assignments view ---
         QWidget *pageCourseDetail = new QWidget(m_contentStack);
@@ -389,7 +400,7 @@ public:
         m_assignmentInput= new QLineEdit(pageCourseDetail);
         m_assignmentInput -> setPlaceholderText("Title: ");
         m_assignmentTopicInput = new QLineEdit(pageCourseDetail);
-        m_assignmentTopicInput -> setPlaceholderText("Topic: ");
+        m_assignmentTopicInput -> setPlaceholderText("Topic/Duration: ");
 
         m_assignmentDate = new QDateEdit(pageCourseDetail);
         m_assignmentDate -> setDate(QDate::currentDate());  // default to current date
@@ -423,9 +434,41 @@ public:
         courseLayout -> addWidget(m_assignmentTable);
         courseLayout -> addLayout(addAssignmentLayout);
 
-        // --- Page 2: Settings  (Placeholder)
-        QLabel *pageSettings = new QLabel("Settings Menu", m_contentStack);
-        pageSettings -> setAlignment(Qt::AlignCenter);
+        // --- Page 2: Settings
+        QWidget *pageSettings = new QWidget(m_contentStack);
+        QVBoxLayout *settingsLayout = new QVBoxLayout(pageSettings);
+        settingsLayout -> setContentsMargins(30, 30, 30, 30);
+        settingsLayout -> setSpacing(15);
+
+        QLabel *settingsTitle = new QLabel("Settings", pageSettings);
+        settingsTitle -> setAlignment(Qt::AlignCenter);
+        settingsTitle -> setStyleSheet("font-size: 22px; font-weight: bold; color: #2979ff;");
+
+        QLabel *appNameLabel = new QLabel("AssignMate", pageSettings);
+        appNameLabel -> setAlignment(Qt::AlignCenter);
+        appNameLabel -> setStyleSheet("font-size: 22px; font-weight: bold; color: #2979ff;");
+
+        QLabel *appDescriptionLabel = new QLabel("A simple assignment tracker for managing course workload");
+        appDescriptionLabel -> setAlignment(Qt::AlignCenter);
+        appDescriptionLabel -> setWordWrap(true);
+        appDescriptionLabel -> setStyleSheet("font-size: 14px; color: #8a99af;");
+
+        QLabel *builtWithLabel = new QLabel("Built with Qt, C++17 & CMake", pageSettings);
+        builtWithLabel -> setAlignment(Qt::AlignCenter);
+        builtWithLabel -> setStyleSheet("font-size: 14px; color: #8a99af;");
+
+        QLabel *versionLabel = new QLabel("Version 1.0", pageSettings);
+        versionLabel -> setAlignment(Qt::AlignCenter);
+        versionLabel -> setStyleSheet("font-size: 14px; color: #8a99af;");
+
+        settingsLayout -> addStretch();
+        settingsLayout -> addWidget(settingsTitle);
+        settingsLayout -> addSpacing(20);
+        settingsLayout -> addWidget(appNameLabel);
+        settingsLayout -> addWidget(appDescriptionLabel);
+        settingsLayout -> addWidget(builtWithLabel);
+        settingsLayout -> addWidget(versionLabel);
+        settingsLayout -> addStretch();
 
         // --- Register pages into the StackedWidget ----
         m_contentStack -> addWidget(pageDashboard);    // index 0
@@ -500,8 +543,46 @@ public:
            }
         });
 
-        // Event: Course item clicked in Dashboard list
-        connect(m_courseList, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
+        // Event: 'Drop Course' button clicked
+        connect(btnDropCourse, &QPushButton::clicked, this, [this]() {
+            int currentIdx = m_courseList -> currentRow();
+            // Ensure a valid item is selected
+            if (currentIdx >= 0 && currentIdx < m_courses.size()) {
+                // Get a pointer to the course object to be deleted
+                Course* courseToDelete = m_courses[currentIdx];
+
+                // Remove pointer from master list
+                m_courses.removeAt(currentIdx);
+                // Delete course object to free its memory
+                // ~Course() handles deleting child assignments
+                delete courseToDelete;
+
+                // Update UI to reflect removal
+                refreshCourseList();
+            }
+        });
+
+        // Event: 'Open Selected Course' button clicked
+        connect(btnOpenCourse, &QPushButton::clicked, this, [this]() {
+            int index = m_courseList -> currentRow();
+            if (index >= 0 && index < m_courses.size()) {
+                m_currentCourse = m_courses[index]; // Set active context
+                m_courseTitleLabel -> setText(m_currentCourse -> getName());
+                refreshAssignmentTable();
+
+                // show controls pertinent to a course
+                m_assignmentTypeCombo -> show();
+                m_assignmentInput -> show();
+                m_assignmentDate -> show();
+                m_btnAddAssignment -> show();
+                m_btnDropAssignment -> show();
+
+                m_contentStack -> setCurrentIndex(1);   // return to view of given course
+            }
+        });
+
+        // Event: Course item double-clicked in Dashboard list
+        connect(m_courseList, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem *item) {
             int index = m_courseList -> row(item);
             if (index >= 0 && index < m_courses.size()) {
                 m_currentCourse = m_courses[index]; // Set active context
