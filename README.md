@@ -15,7 +15,7 @@ This project was built using core OOP principles, GUI event-driven programming, 
 - **Course Management**: add dynamically generated courses 
 - **Assignment Tracking**: input individual assignments (Homework, Exams) to their given courses 
 - **Aggregated Dashboard**: View all assignments across all courses 
-- **Dynamic Table UI**: Assignments include titles, due dates, interactive completion checkboxes, and specific polymorphic details (ex. exam duration, homework task count)
+- **Dynamic Table UI**: Assignments include titles, due dates, interactive completion checkboxes, and specific polymorphic details (ex. exam duration, homework topic)
 
 ### Technical Architecture
 The application was built from scratch using pure C++ & core Qt modules, such as:<br>
