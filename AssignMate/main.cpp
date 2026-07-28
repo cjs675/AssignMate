@@ -379,7 +379,7 @@ public:
         m_assignmentTypeCombo = new QComboBox(pageCourseDetail);
         m_assignmentTypeCombo -> addItems({"Homework", "Exam"});
         m_assignmentInput= new QLineEdit(pageCourseDetail);
-        m_assignmentInput -> setPlaceholderText("New assignment title: ");
+        m_assignmentInput -> setPlaceholderText("Title: ");
         m_assignmentTopicInput = new QLineEdit(pageCourseDetail);
         m_assignmentTopicInput -> setPlaceholderText("Topic: ");
 
@@ -573,7 +573,13 @@ public:
      *        Used by 'All Assignments' sidebar tab
      */
     void returnAllAssignments() {
-        m_courseTitleLabel -> setText("All Active Assignments");
+        m_courseTitleLabel -> setText("All Assignments");
+        m_assignmentTable -> setColumnCount(5);
+        m_assignmentTable -> setHorizontalHeaderLabels({ "Status",
+                                                            "Course",
+                                                            "Title",
+                                                            "Due Date",
+                                                            "Details" });
         m_assignmentTable -> setRowCount(0);
 
         for (Course* course : m_courses) {
@@ -597,14 +603,11 @@ public:
                     current -> setCompleted(checked); // update underlying object
                 });
 
-                m_assignmentTable -> setItem(row, 1, new QTableWidgetItem(current -> getTitle()));
-                m_assignmentTable -> setItem(row, 2, new QTableWidgetItem(current -> getDueDate().toString("MM/dd/yyyy")));
 
-                // Add course name to assignment details string so user can
-                // easily ID which course the assignment belongs to in the
-                // aggregate "All Assignments" view
-                QString courseDetailString = QString("[%1] %2").arg(course -> getName(), current -> getDetails());
-                m_assignmentTable -> setItem(row, 3, new QTableWidgetItem(courseDetailString));
+                m_assignmentTable -> setItem(row, 1, new QTableWidgetItem(course -> getName()));
+                m_assignmentTable -> setItem(row, 2, new QTableWidgetItem(current -> getTitle()));
+                m_assignmentTable -> setItem(row, 3, new QTableWidgetItem(current -> getDueDate().toString("MM/dd/yyyy")));
+                m_assignmentTable -> setItem(row, 4, new QTableWidgetItem(current -> getDetails()));
             }
         }
     }
@@ -616,6 +619,12 @@ public:
     void refreshAssignmentTable() {
         // exit out of function if no course is selected
         if (!m_currentCourse) return;
+        // reset table layout for individual course view
+        m_assignmentTable -> setColumnCount(4);
+        m_assignmentTable -> setHorizontalHeaderLabels({ "Status",
+                                                            "Title",
+                                                            "Due Date",
+                                                            "Details"});
         // clear table
         m_assignmentTable -> setRowCount(0);
         QVector<Assignment*>& assignments = m_currentCourse -> getAssignments();
