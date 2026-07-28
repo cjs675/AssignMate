@@ -562,28 +562,9 @@ public:
             }
         });
 
-        // Event: 'Open Selected Course' button clicked
+        // Event: 'Open Course' button clicked
         connect(btnOpenCourse, &QPushButton::clicked, this, [this]() {
             int index = m_courseList -> currentRow();
-            if (index >= 0 && index < m_courses.size()) {
-                m_currentCourse = m_courses[index]; // Set active context
-                m_courseTitleLabel -> setText(m_currentCourse -> getName());
-                refreshAssignmentTable();
-
-                // show controls pertinent to a course
-                m_assignmentTypeCombo -> show();
-                m_assignmentInput -> show();
-                m_assignmentDate -> show();
-                m_btnAddAssignment -> show();
-                m_btnDropAssignment -> show();
-
-                m_contentStack -> setCurrentIndex(1);   // return to view of given course
-            }
-        });
-
-        // Event: Course item double-clicked in Dashboard list
-        connect(m_courseList, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem *item) {
-            int index = m_courseList -> row(item);
             if (index >= 0 && index < m_courses.size()) {
                 m_currentCourse = m_courses[index]; // Set active context
                 m_courseTitleLabel -> setText(m_currentCourse -> getName());
@@ -597,7 +578,27 @@ public:
                 m_btnAddAssignment -> show();
                 m_btnDropAssignment -> show();
 
-                m_contentStack -> setCurrentIndex(1);   // return to view of given course
+                m_contentStack -> setCurrentIndex(1);   // Return to view of a given course
+            }
+        });
+
+        // Event: Course item DOUBLE-clicked in Dashboard List
+        connect(m_courseList, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem *item) {
+           int index = m_courseList -> row(item);
+            if (index >= 0 && index < m_courses.size()) {
+                m_currentCourse = m_courses[index]; // Set active context
+                m_courseTitleLabel -> setText(m_currentCourse -> getName());
+                refreshAssignmentTable();
+
+                // Show controls pertinent to a course
+                // if a specified course is now active
+                m_assignmentTypeCombo -> show();
+                m_assignmentInput -> show();
+                m_assignmentDate -> show();
+                m_btnAddAssignment -> show();
+                m_btnDropAssignment -> show();
+
+                m_contentStack -> setCurrentIndex(1);   // Return to view of a given course
             }
         });
 
