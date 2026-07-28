@@ -224,9 +224,14 @@ class MainWindow : public QMainWindow {
 
 private:
     // --- Core Data State --
+
     // master list of all created courses
     QVector<Course*> m_courses;
-    // pointer tracking course being views by user
+
+    // maps each visible table row to its underlying Assignment object
+    QVector<Assignment*> m_table_assignments;
+
+    // pointer tracking course being viewed by user
     Course* m_currentCourse = nullptr;
 
     // UI elements to be accessed across helper functions
@@ -240,6 +245,8 @@ private:
     QDateEdit *m_assignmentDate;
     QPushButton *m_btnAddAssignment;
     QPushButton *m_btnDropAssignment;
+    QPushButton *m_btnMarkComplete;
+    QPushButton *m_btnMarkIncomplete;
     QLineEdit *m_assignmentTopicInput;
 
 
@@ -394,12 +401,19 @@ public:
         m_btnDropAssignment = new QPushButton("Drop Selected Assignment", pageCourseDetail);
         m_btnDropAssignment -> setObjectName("dangerBtn");
 
+        m_btnMarkComplete = new QPushButton("Mark Complete", pageCourseDetail);
+        m_btnMarkComplete -> setObjectName("actionBtn");
+        m_btnMarkIncomplete = new QPushButton("Mark Incomplete", pageCourseDetail);
+        m_btnMarkIncomplete -> setObjectName("actionBtn");
+
         addAssignmentLayout -> addWidget(m_assignmentTypeCombo);
         addAssignmentLayout -> addWidget(m_assignmentInput);
         addAssignmentLayout -> addWidget(m_assignmentTopicInput);
         addAssignmentLayout -> addWidget(m_assignmentDate);
         addAssignmentLayout -> addWidget(m_btnAddAssignment);
         addAssignmentLayout -> addWidget(m_btnDropAssignment);
+        addAssignmentLayout -> addWidget(m_btnMarkComplete);
+        addAssignmentLayout -> addWidget(m_btnMarkIncomplete);
 
         courseLayout -> addLayout(courseHeaderLayout);
         courseLayout -> addWidget(m_assignmentTable);
@@ -536,6 +550,36 @@ public:
            }
         });
 
+        // Event: 'Mark Complete' button clicked
+        connect(m_btnMarkComplete, &QPushButton::clicked, this, [this]() {
+            int row = m_assignmentTable -> currentRow();
+
+            if (row >= 0 && row < m_table_assignments.size()) {
+                m_table_assignments[row] -> setCompleted(true);
+
+                if (m_currentCourse) {
+                    refreshAssignmentTable();
+                } else {
+                    returnAllAssignments();
+                }
+            }
+        });
+
+        // Event: 'Mark Incomplete' button clicked
+        connect(m_btnMarkIncomplete, &QPushButton::clicked, this, [this]() {
+            int row = m_assignmentTable -> currentRow();
+
+            if (row >= 0 && row < m_table_assignments.size()) {
+                m_table_assignments[row] -> setCompleted(false);
+
+                if (m_currentCourse) {
+                    refreshAssignmentTable();
+                } else {
+                    returnAllAssignments();
+                }
+            }
+        });
+
         // load QSS file externally
         QFile styleFile(":/style.qss");
         try {
@@ -580,7 +624,12 @@ public:
                                                             "Title",
                                                             "Due Date",
                                                             "Details" });
+        // clear table
         m_assignmentTable -> setRowCount(0);
+
+        // Clear vector whenever the table is rebuilt.
+        // Assignment pointer is pushed into the vector each time a row is added.
+        m_table_assignments.clear();
 
         for (Course* course : m_courses) {
             QVector<Assignment*>& assignments = course -> getAssignments();
@@ -588,6 +637,7 @@ public:
             for (Assignment* current : assignments) {
                 int row = m_assignmentTable -> rowCount();
                 m_assignmentTable -> insertRow(row);
+                m_table_assignments.push_back(current);
 
                 // Set up interactive checkbox
                 QWidget *checkBoxWidget = new QWidget();
@@ -600,7 +650,8 @@ public:
                 m_assignmentTable -> setCellWidget(row, 0, checkBoxWidget);
 
                 connect(checkBox, &QCheckBox::toggled, this, [current](bool checked) {
-                    current -> setCompleted(checked); // update underlying object
+                    // update underlying object
+                    current -> setCompleted(checked);
                 });
 
 
@@ -627,11 +678,16 @@ public:
                                                             "Details"});
         // clear table
         m_assignmentTable -> setRowCount(0);
+        m_table_assignments.clear();
+
         QVector<Assignment*>& assignments = m_currentCourse -> getAssignments();
 
         for (int row = 0; row < assignments.size(); ++row) {
             m_assignmentTable -> insertRow(row);
             Assignment* current = assignments[row];
+
+            // keep table row index matched with respective Assignment pointer
+            m_table_assignments.push_back(current);
 
             // Set up checkbox to mark status
             QWidget *checkBoxWidget = new QWidget();
