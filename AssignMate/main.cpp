@@ -9,7 +9,6 @@
 #include <QButtonGroup>
 #include <QVector>
 #include <QDate>
-#include <QCheckBox>
 #include <QHeaderView>
 #include <QListWidget>
 #include <QLineEdit>
@@ -637,23 +636,14 @@ public:
             for (Assignment* current : assignments) {
                 int row = m_assignmentTable -> rowCount();
                 m_assignmentTable -> insertRow(row);
+                // keep table row index matched with respective Assignment pointer
                 m_table_assignments.push_back(current);
 
-                // Set up interactive checkbox
-                QWidget *checkBoxWidget = new QWidget();
-                QHBoxLayout *checkBoxLayout = new QHBoxLayout(checkBoxWidget);
-                QCheckBox *checkBox = new QCheckBox;
-                checkBox -> setChecked(current -> isCompleted());
-                checkBoxLayout -> addWidget(checkBox);
-                checkBoxLayout -> setAlignment(Qt::AlignCenter);
-                checkBoxLayout -> setContentsMargins(0, 0, 0, 0);
-                m_assignmentTable -> setCellWidget(row, 0, checkBoxWidget);
-
-                connect(checkBox, &QCheckBox::toggled, this, [current](bool checked) {
-                    // update underlying object
-                    current -> setCompleted(checked);
-                });
-
+                // Display completion status as text
+                QString statusText = current -> isCompleted() ? "Complete" : "Incomplete";
+                QTableWidgetItem *itemStatus = new QTableWidgetItem(statusText);
+                itemStatus -> setTextAlignment(Qt::AlignCenter);
+                m_assignmentTable -> setItem(row, 0, itemStatus);
 
                 m_assignmentTable -> setItem(row, 1, new QTableWidgetItem(course -> getName()));
                 m_assignmentTable -> setItem(row, 2, new QTableWidgetItem(current -> getTitle()));
@@ -689,20 +679,11 @@ public:
             // keep table row index matched with respective Assignment pointer
             m_table_assignments.push_back(current);
 
-            // Set up checkbox to mark status
-            QWidget *checkBoxWidget = new QWidget();
-            QHBoxLayout *checkBoxLayout = new QHBoxLayout(checkBoxWidget);
-            QCheckBox *checkBox = new QCheckBox();
-            checkBox -> setChecked(current -> isCompleted());
-            checkBoxLayout -> addWidget(checkBox);
-            checkBoxLayout -> setAlignment(Qt::AlignCenter);
-            checkBoxLayout -> setContentsMargins(0, 0, 0, 0);
-            m_assignmentTable -> setCellWidget(row, 0, checkBoxWidget);
-
-            // connect checkbox toggle so it updates underlying object
-            connect(checkBox, &QCheckBox::toggled, this, [current](bool checked) {
-                current -> setCompleted(checked);
-            });
+            // Display completion status as text
+            QString statusText = current -> isCompleted() ? "Complete" : "Incomplete";
+            QTableWidgetItem *itemStatus = new QTableWidgetItem(statusText);
+            itemStatus -> setTextAlignment(Qt::AlignCenter);
+            m_assignmentTable -> setItem(row, 0, itemStatus);
 
             m_assignmentTable -> setItem(row, 1, new QTableWidgetItem(current -> getTitle()));
             m_assignmentTable -> setItem(row, 2, new QTableWidgetItem(current -> getDueDate().toString("MM, dd, yyyy")));
