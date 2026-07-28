@@ -594,6 +594,7 @@ public:
                 // if a specified course is now active
                 m_assignmentTypeCombo -> show();
                 m_assignmentInput -> show();
+                m_assignmentTopicInput -> show();
                 m_assignmentDate -> show();
                 m_btnAddAssignment -> show();
                 m_btnDropAssignment -> show();
