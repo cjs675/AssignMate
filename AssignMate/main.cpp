@@ -409,7 +409,7 @@ public:
 
         m_btnAddAssignment = new QPushButton("Add\n Assignment", pageCourseDetail);
         m_btnAddAssignment -> setObjectName("actionBtn");
-        m_btnDropAssignment = new QPushButton("Drop Selected\n Assignment", pageCourseDetail);
+        m_btnDropAssignment = new QPushButton("Drop\n Assignment", pageCourseDetail);
         m_btnDropAssignment -> setObjectName("dangerBtn");
 
         m_btnMarkComplete = new QPushButton("Mark Complete", pageCourseDetail);
