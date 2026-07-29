@@ -80,21 +80,21 @@ QPushButton#completeBtn, QPushButton#incompleteBtn {
     font-weight: bold;
 }
 QPushButton#actionBtn {
-    background-color: #2979ff;
-    color: white;
+    background-color: #5B8DEF;
+    color: #0D1220;
 }
 
 QPushButton#dangerBtn {
-    background-color: #991b1b;
-    color: white;
+    border: 1px solid #7A3D40;
+    color: #C1666B;
 }
 QPushButton#completeBtn {
-    background-color: #2e7d32;
-    color: white;
+    border: 1px solid #3F5A48;
+    color: #7DAE8C;
 }
 QPushButton#incompleteBtn {
-    background-color: #9ca3af;
-    color: white;
+    border: 1px solid #4B5060;
+    color: #9CA3AF;
 }
 
 
