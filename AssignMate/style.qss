@@ -80,7 +80,7 @@ QPushButton#completeBtn, QPushButton#incompleteBtn {
     font-weight: bold;
 }
 QPushButton#actionBtn {
-    background-color: #4A7BD9;
+    border: 1px solid #4A7BD9;
     color: #F5F7FA;
 }
 QPushButton#actionBtn:hover {
