@@ -346,7 +346,7 @@ public:
 
         // Layout for course management buttons
         QHBoxLayout *courseManagementLayout = new QHBoxLayout();
-        QPushButton *btnOpenCourse = new QPushButton("Open Selected Course", pageDashboard);
+        QPushButton *btnOpenCourse = new QPushButton("Open Course", pageDashboard);
         btnOpenCourse -> setObjectName("actionBtn");
         QPushButton *btnDropCourse = new QPushButton("Drop Course", pageDashboard);
         btnDropCourse -> setObjectName("dangerBtn");
