@@ -407,9 +407,9 @@ public:
         // more UI-friendly than inputting date as
         // standard MM-DD-YYYY format
 
-        m_btnAddAssignment = new QPushButton("Add Assignment", pageCourseDetail);
+        m_btnAddAssignment = new QPushButton("Add\n Assignment", pageCourseDetail);
         m_btnAddAssignment -> setObjectName("actionBtn");
-        m_btnDropAssignment = new QPushButton("Drop Selected Assignment", pageCourseDetail);
+        m_btnDropAssignment = new QPushButton("Drop Selected\n Assignment", pageCourseDetail);
         m_btnDropAssignment -> setObjectName("dangerBtn");
 
         m_btnMarkComplete = new QPushButton("Mark Complete", pageCourseDetail);
