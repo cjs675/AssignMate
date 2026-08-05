@@ -9,15 +9,18 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-# Find both the Qt6 Widgets AND Sql libraries. 
+# Find the Qt6 Widgets library
 # CMake handles finding the correct paths automatically based on system
-find_package(Qt6 REQUIRED COMPONENTS Widgets Sql)
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 # Create executable
-add_executable(Tracker main.cpp
-                 resources.qrc
+add_executable(Tracker
+        main.cpp
+        resources.qrc
+
         ui/MainWindow.cpp
         ui/MainWindow.h
+
         models/Assignment.cpp
         models/Assignment.h
         models/Exam.cpp
@@ -26,7 +29,16 @@ add_executable(Tracker main.cpp
         models/Homework.h
         models/Course.cpp
         models/Course.h
-) 
+)
+
+target_include_directories(Tracker PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/models
+    ${CMAKE_CURRENT_SOURCE_DIR}/ui
+)
+
+
 
 # Link both Qt6 libraries to executable
-target_link_libraries(Tracker PRIVATE Qt6::Widgets Qt6::Sql)
+target_link_libraries(Tracker PRIVATE
+        Qt6::Widgets)

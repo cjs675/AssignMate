@@ -34,7 +34,7 @@ cd build
 - point brew-based Qt install location in CMake 
 
 ```bash
-cmake -DCMAKE_MAKE_PATH=$(brew --prefix qt) .. 
+cmake -DCMAKE_PREFIX_PATH=$(brew --prefix qt) .. 
 ```
 - compile the code: 
 
