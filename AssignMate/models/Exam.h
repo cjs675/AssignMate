@@ -20,14 +20,13 @@ private:
     int m_minuteDuration;
 
 public:
-    Exam(const QString& title, const QDate& dueDate, int minuteDuration);
+    Exam(const QString &title, const QDate &dueDate, int minuteDuration);
 
     /**
      * @brief Polymorphic override that formats the child class's
      * unique duration values for the UI table
      */
     QString getDetails() const override;
-
 };
 
 #endif //ASSIGNMENTTRACKER_EXAM_H

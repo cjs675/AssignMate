@@ -5,7 +5,8 @@
 #include "Course.h"
 
 Course::Course(QString name)
-    : m_name(name) {}
+    : m_name(name) {
+}
 
 /**
  *  @brief Destructor to clean up memory when the course object
@@ -14,7 +15,7 @@ Course::Course(QString name)
  *         Assignment pointers
  */
 Course::~Course() {
-    for (Assignment* a : m_assignments) {
+    for (Assignment *a: m_assignments) {
         delete a;
     }
 }
@@ -34,7 +35,7 @@ QString Course::getName() const {
  *         This ensures when we add/remove an assignment, we modify the
  *         actual course object's data rather than modifying a copy.
  */
-QVector<Assignment*>& Course::getAssignments() {
+QVector<Assignment *> &Course::getAssignments() {
     return m_assignments;
 }
 
@@ -46,9 +47,10 @@ QVector<Assignment*>& Course::getAssignments() {
  *        The course then takes ownership of its memory & guarantees
  *        it will be safely deleted by its destructor.
  */
-void Course::addAssignment(Assignment* a) {
+void Course::addAssignment(Assignment *a) {
     m_assignments.push_back(a);
 }
+
 void Course::dropAssignment(int index) {
     if (index >= 0 && index < m_assignments.size()) {
         // remove allocated memory

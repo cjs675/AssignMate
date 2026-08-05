@@ -34,16 +34,19 @@ private:
      *         function, its objects can't be stored by value - they must
      *         be stored as pointers.
      */
-    QVector<Assignment*> m_assignments;
+    QVector<Assignment *> m_assignments;
 
 public:
     explicit Course(QString name);
+
     ~Course();
 
     QString getName() const;
-    QVector<Assignment*>& getAssignments();
 
-    void addAssignment(Assignment* assignment);
+    QVector<Assignment *> &getAssignments();
+
+    void addAssignment(Assignment *assignment);
+
     void dropAssignment(int index);
 };
 

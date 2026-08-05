@@ -30,7 +30,7 @@ public:
     Assignment(const QString &title,
                const QDate &dueDate,
                bool isCompleted = false,
-               const QString& assignmentTopicInput = "");
+               const QString &assignmentTopicInput = "");
 
     /**
      * @brief Virtual Destructor
@@ -42,8 +42,11 @@ public:
 
     // getters & setters
     QString getTitle() const;
+
     QDate getDueDate() const;
+
     bool isCompleted() const;
+
     void setCompleted(bool status);
 
     /**

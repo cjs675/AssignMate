@@ -15,14 +15,14 @@
 class Homework : public Assignment {
 private:
     QString m_topic;
+
 public:
-    Homework(const QString& title, const QDate& dueDate, const QString& topic);
+    Homework(const QString &title, const QDate &dueDate, const QString &topic);
 
     /**
      * @brief Formats the child class's unique task values for the UI table
      */
     QString getDetails() const override;
-
 };
 
 #endif //ASSIGNMENTTRACKER_HOMEWORK_H

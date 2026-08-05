@@ -32,13 +32,13 @@ private:
     // --- Core Data State --
 
     // master list of all created courses
-    QVector<Course*> m_courses;
+    QVector<Course *> m_courses;
 
     // maps each visible table row to its underlying Assignment object
-    QVector<Assignment*> m_table_assignments;
+    QVector<Assignment *> m_table_assignments;
 
     // pointer tracking course being viewed by user
-    Course* m_currentCourse = nullptr;
+    Course *m_currentCourse = nullptr;
 
     // UI elements to be accessed across helper functions
     QStackedWidget *m_contentStack;
@@ -59,7 +59,7 @@ public:
     /**
      * @brief Main window constructor - builds entire UI layout on launch
      */
-     explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
 
     /**
      * @brief Destructor to clean up course objects stored within course vector
